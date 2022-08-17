@@ -9,6 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator"
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
@@ -47,10 +48,12 @@ func (service *AuthServiceImpl) SignUp(ctx *gin.Context, request *dto.UserCreate
 			Message: msgError,
 		}
 	} else {
+		newPassword, err := HashPassword(request.Password)
+		helper.PanicIfError(err)
 		user := entity.User{
 			Username:    request.Username,
 			Email:       request.Email,
-			Password:    request.Password,
+			Password:    newPassword,
 			PhoneNumber: request.PhoneNumber,
 			SignupWith:  request.SignupWith,
 			CreatedAt:   request.Created,
@@ -61,4 +64,14 @@ func (service *AuthServiceImpl) SignUp(ctx *gin.Context, request *dto.UserCreate
 
 		return helper.ToAuthResponseDTO(userResponse)
 	}
+}
+
+func HashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	return string(bytes), err
+}
+
+func CheckPasswordHash(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
 }
