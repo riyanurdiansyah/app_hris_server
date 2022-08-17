@@ -1,7 +1,7 @@
 package config
 
 import (
-	"belajar/helper"
+	"app-ecommerce-server/helper"
 	"os"
 	"time"
 

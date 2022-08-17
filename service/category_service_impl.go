@@ -1,11 +1,11 @@
 package service
 
 import (
-	"belajar/dto"
-	"belajar/entity"
-	"belajar/helper"
-	"belajar/repository"
-	"belajar/validation"
+	"app-ecommerce-server/data/dto"
+	"app-ecommerce-server/data/entity"
+	"app-ecommerce-server/helper"
+	"app-ecommerce-server/repository"
+	"app-ecommerce-server/validation"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator"
@@ -27,11 +27,11 @@ func NewCategoryService(categoryRepository repository.CategoryRepository, DB *go
 	}
 }
 
-func (service *CategoryServiceImpl) InsertCategory(ctx *gin.Context, request dto.CategoryCreateDTO) dto.CategoryResponseDTO {
+func (service *CategoryServiceImpl) InsertCategory(ctx *gin.Context, request *dto.CategoryCreateDTO) *dto.CategoryResponseDTO {
 	errorValidation := service.Validate.Struct(request)
 	if errorValidation != nil {
 		msgError := validation.CategoryValidation(errorValidation.Error())
-		return dto.CategoryResponseDTO{
+		return &dto.CategoryResponseDTO{
 			Error:   true,
 			Message: msgError,
 		}
@@ -40,7 +40,7 @@ func (service *CategoryServiceImpl) InsertCategory(ctx *gin.Context, request dto
 	defer helper.CommitOrRollback(tx)
 	if tx.Error != nil {
 		msgError := validation.CategoryValidation(tx.Error.Error())
-		return dto.CategoryResponseDTO{
+		return &dto.CategoryResponseDTO{
 			Error:   true,
 			Message: msgError,
 		}
@@ -51,28 +51,28 @@ func (service *CategoryServiceImpl) InsertCategory(ctx *gin.Context, request dto
 			UpdatedAt: request.Updated,
 		}
 
-		category = service.CategoryRepository.InsertCategory(ctx, tx, category)
+		categoryResponse := service.CategoryRepository.InsertCategory(ctx, tx, &category)
 
-		return helper.ToCategoryResponseDTO(category)
+		return helper.ToCategoryResponseDTO(categoryResponse)
 	}
 }
 
-func (service *CategoryServiceImpl) FindAllCategory(ctx *gin.Context) []dto.CategoryResponseDTO {
+func (service *CategoryServiceImpl) FindAllCategory(ctx *gin.Context) []*dto.CategoryResponseDTO {
 	tx := service.DB.Begin()
 	defer helper.CommitOrRollback(tx)
 	if tx.Error != nil {
-		return []dto.CategoryResponseDTO{}
+		return []*dto.CategoryResponseDTO{}
 	} else {
 		listCategory := service.CategoryRepository.FindAllCategory(ctx, tx)
 		return helper.ToListCategoryResponseDTO(listCategory)
 	}
 }
 
-func (service *CategoryServiceImpl) FindByIdCategory(ctx *gin.Context, categoryId int) dto.CategoryResponseDTO {
+func (service *CategoryServiceImpl) FindByIdCategory(ctx *gin.Context, categoryId int) *dto.CategoryResponseDTO {
 	tx := service.DB.Begin()
 	defer helper.CommitOrRollback(tx)
 	if tx.Error != nil {
-		return dto.CategoryResponseDTO{
+		return &dto.CategoryResponseDTO{
 			Error:   true,
 			Message: "terjadi kesalahan.. silahkan coba lagi",
 		}
@@ -93,11 +93,11 @@ func (service *CategoryServiceImpl) DeleteCategory(ctx *gin.Context, categoryId 
 	}
 }
 
-func (service *CategoryServiceImpl) UpdateCategory(ctx *gin.Context, request dto.CategoryUpdateDTO) dto.CategoryResponseDTO {
+func (service *CategoryServiceImpl) UpdateCategory(ctx *gin.Context, request *dto.CategoryUpdateDTO) *dto.CategoryResponseDTO {
 	errorValidation := service.Validate.Struct(request)
 	if errorValidation != nil {
 		msgError := validation.CategoryValidation(errorValidation.Error())
-		return dto.CategoryResponseDTO{
+		return &dto.CategoryResponseDTO{
 			Error:   true,
 			Message: msgError,
 		}
@@ -105,19 +105,19 @@ func (service *CategoryServiceImpl) UpdateCategory(ctx *gin.Context, request dto
 	tx := service.DB.Begin()
 	defer helper.CommitOrRollback(tx)
 	if tx.Error != nil {
-		return dto.CategoryResponseDTO{
+		return &dto.CategoryResponseDTO{
 			Error:   true,
 			Message: "terjadi kesalahan... silahkan coba beberapa saat lagi",
 		}
 	} else {
-		categoryResponse := entity.Category{
+		category := entity.Category{
 			ID:        request.Id,
 			Name:      request.Name,
 			CreatedAt: request.Created,
 			UpdatedAt: request.Updated,
 		}
 
-		categoryResponse = service.CategoryRepository.UpdateCategory(ctx, tx, categoryResponse)
+		categoryResponse := service.CategoryRepository.UpdateCategory(ctx, tx, &category)
 
 		return helper.ToCategoryResponseDTO(categoryResponse)
 	}

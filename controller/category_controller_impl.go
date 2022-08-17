@@ -1,9 +1,9 @@
 package controller
 
 import (
-	"belajar/dto"
-	"belajar/helper"
-	"belajar/service"
+	"app-ecommerce-server/data/dto"
+	"app-ecommerce-server/helper"
+	"app-ecommerce-server/service"
 	"net/http"
 	"strconv"
 
@@ -24,7 +24,7 @@ func (controller *CategoryControllerImpl) InsertCategory(c *gin.Context) {
 	categoryCreateRequest := dto.CategoryCreateDTO{}
 	helper.ReadFromRequestBody(c.Request, &categoryCreateRequest)
 
-	categoryResponse := controller.CategoryService.InsertCategory(c, categoryCreateRequest)
+	categoryResponse := controller.CategoryService.InsertCategory(c, &categoryCreateRequest)
 	if categoryResponse.Error {
 		responses := helper.DefaultResponse{
 			Code:   http.StatusBadRequest,
@@ -130,7 +130,7 @@ func (controller *CategoryControllerImpl) UpdateCategory(c *gin.Context) {
 	categoryUpdateRequest := dto.CategoryUpdateDTO{}
 	helper.ReadFromRequestBody(c.Request, &categoryUpdateRequest)
 
-	categoryResponse := controller.CategoryService.UpdateCategory(c, categoryUpdateRequest)
+	categoryResponse := controller.CategoryService.UpdateCategory(c, &categoryUpdateRequest)
 	if categoryResponse.Error {
 		responses := helper.DefaultResponse{
 			Code:   http.StatusBadRequest,

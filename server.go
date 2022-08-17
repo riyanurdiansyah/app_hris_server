@@ -1,10 +1,10 @@
 package main
 
 import (
-	"belajar/config"
-	"belajar/controller"
-	"belajar/repository"
-	"belajar/service"
+	"app-ecommerce-server/config"
+	"app-ecommerce-server/controller"
+	"app-ecommerce-server/repository"
+	"app-ecommerce-server/service"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator"
@@ -19,6 +19,10 @@ func main() {
 	categoryService := service.NewCategoryService(categoryRepository, db, validate)
 	categoryController := controller.NewCategoryController(categoryService)
 
+	authRepository := repository.NewAuthRepository()
+	authService := service.NewAuthService(authRepository, db, validate)
+	authController := controller.NewAuthController(authService)
+
 	r := gin.Default()
 	v1 := r.Group("/api/v1")
 	{
@@ -29,6 +33,11 @@ func main() {
 			categories.GET("/:id", categoryController.FindByIdCategory)
 			categories.PUT("", categoryController.UpdateCategory)
 			categories.DELETE("/:id", categoryController.DeleteCategory)
+		}
+
+		auth := v1.Group("/auth")
+		{
+			auth.POST("/signup", authController.SignUp)
 		}
 	}
 	r.Run()

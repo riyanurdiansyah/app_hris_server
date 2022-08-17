@@ -1,7 +1,8 @@
 package repository
 
 import (
-	"belajar/entity"
+	"app-ecommerce-server/data/entity"
+	"app-ecommerce-server/helper"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -14,7 +15,7 @@ func NewCategoryRepository() CategoryRepository {
 	return &CategoryRepositoryImpl{}
 }
 
-func (repository *CategoryRepositoryImpl) InsertCategory(ctx *gin.Context, db *gorm.DB, category entity.Category) entity.Category {
+func (repository *CategoryRepositoryImpl) InsertCategory(ctx *gin.Context, db *gorm.DB, category *entity.Category) *entity.Category {
 	result := db.Table("categories").Select("*").Create(&category)
 	if result.Error != nil {
 		///handle panic
@@ -23,26 +24,20 @@ func (repository *CategoryRepositoryImpl) InsertCategory(ctx *gin.Context, db *g
 	return category
 }
 
-func (repository *CategoryRepositoryImpl) FindAllCategory(ctx *gin.Context, db *gorm.DB) []entity.Category {
-	var listCategory = []entity.Category{}
+func (repository *CategoryRepositoryImpl) FindAllCategory(ctx *gin.Context, db *gorm.DB) []*entity.Category {
+	var listCategory = []*entity.Category{}
 	result :=
 		db.Table("categories").Select("*").Scan(&listCategory)
-	if result.Error != nil {
-		///handle panic
-		panic(result.Error)
-	}
+	helper.PanicIfError(result.Error)
 	return listCategory
 }
 
-func (repository *CategoryRepositoryImpl) FindByIdCategory(ctx *gin.Context, db *gorm.DB, categoryId int) entity.Category {
+func (repository *CategoryRepositoryImpl) FindByIdCategory(ctx *gin.Context, db *gorm.DB, categoryId int) *entity.Category {
 	var category = entity.Category{}
 	result :=
 		db.Table("categories").Select("*").Where("id = ?", categoryId).Scan(&category)
-	if result.Error != nil {
-		///handle panic
-		panic(result.Error)
-	}
-	return category
+	helper.PanicIfError(result.Error)
+	return &category
 }
 
 func (repository *CategoryRepositoryImpl) DeleteCategory(ctx *gin.Context, db *gorm.DB, categoryId int) int {
@@ -67,7 +62,7 @@ func (repository *CategoryRepositoryImpl) DeleteCategory(ctx *gin.Context, db *g
 
 }
 
-func (repository *CategoryRepositoryImpl) UpdateCategory(ctx *gin.Context, db *gorm.DB, category entity.Category) entity.Category {
+func (repository *CategoryRepositoryImpl) UpdateCategory(ctx *gin.Context, db *gorm.DB, category *entity.Category) *entity.Category {
 	var count int64
 	checkid :=
 		db.Table("categories").Select("*").Where("id = ?", category.ID).Count(&count)
