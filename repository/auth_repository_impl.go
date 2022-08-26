@@ -16,7 +16,6 @@ func NewAuthRepository() AuthRepository {
 
 // SignUp implements AuthRepository
 func (repo *AuthRepositoryImpl) SignUp(c *gin.Context, db *gorm.DB, user *entity.User) *entity.User {
-	println("CHECK ROLE LG ", user.Role)
 	result := db.Table("users").Select("*").Create(&user)
 	if result.Error != nil {
 		user.ID = -99
