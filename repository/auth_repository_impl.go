@@ -25,6 +25,28 @@ func (repo *AuthRepositoryImpl) SignUp(c *gin.Context, db *gorm.DB, user *entity
 	return user
 }
 
+// FindUserByEmail implements AuthRepository
+func (*AuthRepositoryImpl) FindUserByEmail(c *gin.Context, db *gorm.DB, email string) *entity.User {
+	var user = entity.User{}
+	result := db.Table("users").Select("*").Where("email = ?", email).Scan(&user)
+	if result.Error != nil {
+		user.ID = -99
+		return &user
+	}
+	return &user
+}
+
+// FindUserByUsername implements AuthRepository
+func (*AuthRepositoryImpl) FindUserByUsername(c *gin.Context, db *gorm.DB, username string) *entity.User {
+	var user = entity.User{}
+	result := db.Table("users").Select("*").Where("username = ?", username).Scan(&user)
+	if result.Error != nil {
+		user.ID = -99
+		return &user
+	}
+	return &user
+}
+
 // CheckEmail implements AuthRepository
 func (*AuthRepositoryImpl) CheckEmail(c *gin.Context, db *gorm.DB, email string) bool {
 	var user = entity.User{}

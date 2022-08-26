@@ -38,6 +38,8 @@ func main() {
 		auth := v1.Group("/auth")
 		{
 			auth.POST("/signup", authController.SignUp)
+			auth.POST("/find", authController.FindUserByUsername)
+			auth.POST("/signin", authController.SigninWithUsername)
 		}
 	}
 	r.Run()

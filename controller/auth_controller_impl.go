@@ -23,6 +23,40 @@ func NewAuthController(authService service.AuthService, jwtService service.JWTSe
 	}
 }
 
+// SigninWithUsername implements AuthController
+func (controller *AuthControllerImpl) SigninWithUsername(c *gin.Context) {
+	userLoginRequest := dto.UserLoginDTO{}
+	helper.ReadFromRequestBody(c.Request, &userLoginRequest)
+	userResponse := controller.AuthService.FindUserByUsername(c, &userLoginRequest)
+	if userResponse.Username == "" {
+		responses := helper.DefaultResponse{
+			Code:   http.StatusBadRequest,
+			Status: "Username is not register",
+			Data:   helper.ObjectKosongResponse{},
+		}
+		c.JSON(http.StatusBadRequest, responses)
+	} else {
+		checkPassword := controller.CheckPasswordHash(userLoginRequest.Password, userResponse.Password)
+		if checkPassword {
+			token := controller.JWTService.GenerateToken(strconv.FormatUint(uint64(userResponse.Id), 10), userResponse.Email)
+			responses := helper.DefaultLoginResponse{
+				Code:   http.StatusOK,
+				Status: "Login is successfull",
+				Data:   userResponse,
+				Token:  token,
+			}
+			c.JSON(http.StatusOK, responses)
+		} else {
+			responses := helper.DefaultResponse{
+				Code:   http.StatusBadRequest,
+				Status: "Password is wrong",
+				Data:   helper.ObjectKosongResponse{},
+			}
+			c.JSON(http.StatusBadRequest, responses)
+		}
+	}
+}
+
 // SignUp implements AuthController
 func (controller *AuthControllerImpl) SignUp(c *gin.Context) {
 	userCreateRequest := dto.UserCreateDTO{}
@@ -69,6 +103,32 @@ func (controller *AuthControllerImpl) SignUp(c *gin.Context) {
 			c.JSON(http.StatusOK, responses)
 		}
 	}
+}
+
+// FindUserByEmail implements AuthController
+func (controller *AuthControllerImpl) FindUserByEmail(c *gin.Context) {
+	userLoginRequest := dto.UserLoginDTO{}
+	helper.ReadFromRequestBody(c.Request, &userLoginRequest)
+	user := controller.AuthService.FindUserByEmail(c, &userLoginRequest)
+	responses := helper.DefaultLoginResponse{
+		Code:   http.StatusOK,
+		Status: "Signin is successfull",
+		Data:   user,
+	}
+	c.JSON(http.StatusOK, responses)
+}
+
+// FindUserByUsername implements AuthController
+func (controller *AuthControllerImpl) FindUserByUsername(c *gin.Context) {
+	userLoginRequest := dto.UserLoginDTO{}
+	helper.ReadFromRequestBody(c.Request, &userLoginRequest)
+	user := controller.AuthService.FindUserByUsername(c, &userLoginRequest)
+	responses := helper.DefaultResponse{
+		Code:   http.StatusOK,
+		Status: "Signin is successfull",
+		Data:   user,
+	}
+	c.JSON(http.StatusOK, responses)
 }
 
 // CheckPasswordHash implements AuthController

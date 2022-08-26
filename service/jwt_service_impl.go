@@ -28,7 +28,7 @@ func NewJWTService() JWTService {
 }
 
 func getSecretKey() string {
-	secretKey := os.Getenv("JWT_SECRET")
+	secretKey := os.Getenv("JWT_SECRET_KEY")
 	if secretKey != "" {
 		secretKey = "riyan"
 	}
@@ -43,6 +43,7 @@ func (service *JWTServiceImpl) GenerateToken(UserId string, Email string) string
 			ExpiresAt: time.Now().Add(time.Duration(time.Now().Hour() + 1)).Unix(),
 			Issuer:    service.issuer,
 			IssuedAt:  time.Now().Unix(),
+			Id:        UserId,
 		},
 	}
 

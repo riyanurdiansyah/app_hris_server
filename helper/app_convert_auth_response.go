@@ -11,6 +11,7 @@ func ToAuthResponseDTO(user *entity.User) *dto.UserResponseDTO {
 		Username:    user.Username,
 		Email:       user.Email,
 		PhoneNumber: user.PhoneNumber,
+		Password:    user.Password,
 		SignupWith:  user.SignupWith,
 		Role:        user.Role,
 		Created:     user.CreatedAt,
