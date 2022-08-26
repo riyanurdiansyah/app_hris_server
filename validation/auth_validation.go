@@ -10,7 +10,7 @@ func SignUpValidation(txterror string) string {
 	} else if strings.Contains(strings.ToLower(txterror), "username") {
 		return "parameter username tidak boleh kosong"
 	} else if strings.Contains(strings.ToLower(txterror), "signup") {
-		return "parameter signup_with tidak boleh kosong"
+		return "parameter register_by tidak boleh kosong"
 	} else if strings.Contains(strings.ToLower(txterror), "created") {
 		return "parameter created_at tidak boleh kosong"
 	} else if strings.Contains(strings.ToLower(txterror), "updated") {

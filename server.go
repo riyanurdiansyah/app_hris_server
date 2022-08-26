@@ -8,7 +8,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator"
-	_ "github.com/go-sql-driver/mysql"
 )
 
 func main() {
@@ -21,7 +20,8 @@ func main() {
 
 	authRepository := repository.NewAuthRepository()
 	authService := service.NewAuthService(authRepository, db, validate)
-	authController := controller.NewAuthController(authService)
+	jwtService := service.NewJWTService()
+	authController := controller.NewAuthController(authService, jwtService)
 
 	r := gin.Default()
 	v1 := r.Group("/api/v1")

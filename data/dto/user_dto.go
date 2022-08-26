@@ -6,7 +6,7 @@ type UserDTO struct {
 	Email       string `json:"email"`
 	Password    string `json:"password"`
 	PhoneNumber string `json:"phone_number"`
-	SignupWith  int    `json:"signup_with"`
+	SignupWith  int    `json:"register_by"`
 	Created     string `json:"created_at"`
 	Updated     string `json:"updated_at"`
 }
@@ -16,9 +16,9 @@ type UserCreateDTO struct {
 	Email       string `json:"email"`
 	Password    string `validate:"required,min=8" json:"password"`
 	PhoneNumber string `json:"phone_number"`
-	SignupWith  int    `validate:"required" json:"signup_with"`
-	Created     string `validate:"required" json:"created_at"`
-	Updated     string `validate:"required" json:"updated_at"`
+	SignupWith  int    `validate:"required" json:"register_by"`
+	Created     string `json:"created_at"`
+	Updated     string `json:"updated_at"`
 }
 
 type UserResponseDTO struct {
@@ -26,7 +26,7 @@ type UserResponseDTO struct {
 	Username    string `json:"username"`
 	Email       string `json:"email"`
 	PhoneNumber string `json:"phone_number"`
-	SignupWith  int    `json:"signup_with"`
+	SignupWith  int    `json:"register_by"`
 	Created     string `json:"created_at"`
 	Updated     string `json:"updated_at"`
 	Error       bool   `json:"-"`

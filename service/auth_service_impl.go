@@ -6,10 +6,10 @@ import (
 	"app-ecommerce-server/helper"
 	"app-ecommerce-server/repository"
 	"app-ecommerce-server/validation"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator"
-	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
@@ -32,6 +32,7 @@ func NewAuthService(authRepository repository.AuthRepository, DB *gorm.DB, valid
 // SignUp implements AuthService
 func (service *AuthServiceImpl) SignUp(ctx *gin.Context, request *dto.UserCreateDTO) *dto.UserResponseDTO {
 	errorValidation := service.Validate.Struct(request)
+	println("ERROR IKI ", errorValidation)
 	if errorValidation != nil {
 		msgError := validation.SignUpValidation(errorValidation.Error())
 		return &dto.UserResponseDTO{
@@ -48,30 +49,18 @@ func (service *AuthServiceImpl) SignUp(ctx *gin.Context, request *dto.UserCreate
 			Message: msgError,
 		}
 	} else {
-		newPassword, err := HashPassword(request.Password)
-		helper.PanicIfError(err)
 		user := entity.User{
 			Username:    request.Username,
 			Email:       request.Email,
-			Password:    newPassword,
+			Password:    request.Password,
 			PhoneNumber: request.PhoneNumber,
 			SignupWith:  request.SignupWith,
-			CreatedAt:   request.Created,
-			UpdatedAt:   request.Updated,
+			CreatedAt:   time.Now().Local().String(),
+			UpdatedAt:   time.Now().Local().String(),
 		}
 
 		userResponse := service.AuthRepository.SignUp(ctx, tx, &user)
 
 		return helper.ToAuthResponseDTO(userResponse)
 	}
-}
-
-func HashPassword(password string) (string, error) {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
-	return string(bytes), err
-}
-
-func CheckPasswordHash(password, hash string) bool {
-	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
-	return err == nil
 }
