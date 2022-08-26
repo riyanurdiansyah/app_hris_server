@@ -24,3 +24,25 @@ func (repo *AuthRepositoryImpl) SignUp(c *gin.Context, db *gorm.DB, user *entity
 
 	return user
 }
+
+// CheckEmail implements AuthRepository
+func (*AuthRepositoryImpl) CheckEmail(c *gin.Context, db *gorm.DB, email string) bool {
+	var user = entity.User{}
+	db.Table("users").Select("*").Where("email = ?", email).Scan(&user)
+	if user.Email == "" {
+		return false
+	} else {
+		return true
+	}
+}
+
+// CheckUsername implements AuthRepository
+func (*AuthRepositoryImpl) CheckUsername(c *gin.Context, db *gorm.DB, username string) bool {
+	var user = entity.User{}
+	db.Table("users").Select("*").Where("username = ?", username).Scan(&user)
+	if user.Username == "" {
+		return false
+	} else {
+		return true
+	}
+}

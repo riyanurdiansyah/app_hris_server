@@ -32,7 +32,6 @@ func NewAuthService(authRepository repository.AuthRepository, DB *gorm.DB, valid
 // SignUp implements AuthService
 func (service *AuthServiceImpl) SignUp(ctx *gin.Context, request *dto.UserCreateDTO) *dto.UserResponseDTO {
 	errorValidation := service.Validate.Struct(request)
-	println("ERROR IKI ", errorValidation)
 	if errorValidation != nil {
 		msgError := validation.SignUpValidation(errorValidation.Error())
 		return &dto.UserResponseDTO{
@@ -62,5 +61,29 @@ func (service *AuthServiceImpl) SignUp(ctx *gin.Context, request *dto.UserCreate
 		userResponse := service.AuthRepository.SignUp(ctx, tx, &user)
 
 		return helper.ToAuthResponseDTO(userResponse)
+	}
+}
+
+// CheckEmail implements AuthService
+func (service *AuthServiceImpl) CheckEmail(ctx *gin.Context, email string) bool {
+	tx := service.DB.Begin()
+	defer helper.CommitOrRollback(tx)
+	if tx.Error != nil {
+		return true
+	} else {
+		result := service.AuthRepository.CheckEmail(ctx, tx, email)
+		return result
+	}
+}
+
+// CheckUsername implements AuthService
+func (service *AuthServiceImpl) CheckUsername(ctx *gin.Context, username string) bool {
+	tx := service.DB.Begin()
+	defer helper.CommitOrRollback(tx)
+	if tx.Error != nil {
+		return true
+	} else {
+		result := service.AuthRepository.CheckUsername(ctx, tx, username)
+		return result
 	}
 }

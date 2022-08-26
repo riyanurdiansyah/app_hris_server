@@ -28,28 +28,46 @@ func (controller *AuthControllerImpl) SignUp(c *gin.Context) {
 	userCreateRequest := dto.UserCreateDTO{}
 	helper.ReadFromRequestBody(c.Request, &userCreateRequest)
 
-	newPassword, err := controller.HashPassword(userCreateRequest.Password)
-	helper.PanicIfError(err)
-
-	userCreateRequest.Password = newPassword
-
-	userCreateResponse := controller.AuthService.SignUp(c, &userCreateRequest)
-	if userCreateResponse.Error {
+	checkEmail := controller.CheckEmail(c, userCreateRequest.Email)
+	checkUsername := controller.CheckUsername(c, userCreateRequest.Username)
+	if checkEmail {
 		responses := helper.DefaultResponse{
 			Code:   http.StatusBadRequest,
-			Status: userCreateResponse.Message,
+			Status: "Email already registered",
+			Data:   helper.ObjectKosongResponse{},
+		}
+		c.JSON(http.StatusBadRequest, responses)
+	} else if checkUsername {
+		responses := helper.DefaultResponse{
+			Code:   http.StatusBadRequest,
+			Status: "Username already registered",
 			Data:   helper.ObjectKosongResponse{},
 		}
 		c.JSON(http.StatusBadRequest, responses)
 	} else {
-		token := controller.JWTService.GenerateToken(strconv.FormatUint(uint64(userCreateResponse.Id), 10), userCreateResponse.Email)
-		responses := helper.DefaultLoginResponse{
-			Code:   http.StatusOK,
-			Status: "New user has been added",
-			Data:   userCreateResponse,
-			Token:  token,
+		newPassword, err := controller.HashPassword(userCreateRequest.Password)
+		helper.PanicIfError(err)
+
+		userCreateRequest.Password = newPassword
+
+		userCreateResponse := controller.AuthService.SignUp(c, &userCreateRequest)
+		if userCreateResponse.Error {
+			responses := helper.DefaultResponse{
+				Code:   http.StatusBadRequest,
+				Status: userCreateResponse.Message,
+				Data:   helper.ObjectKosongResponse{},
+			}
+			c.JSON(http.StatusBadRequest, responses)
+		} else {
+			token := controller.JWTService.GenerateToken(strconv.FormatUint(uint64(userCreateResponse.Id), 10), userCreateResponse.Email)
+			responses := helper.DefaultLoginResponse{
+				Code:   http.StatusOK,
+				Status: "New user has been added",
+				Data:   userCreateResponse,
+				Token:  token,
+			}
+			c.JSON(http.StatusOK, responses)
 		}
-		c.JSON(http.StatusOK, responses)
 	}
 }
 
@@ -63,4 +81,16 @@ func (*AuthControllerImpl) CheckPasswordHash(password string, hash string) bool 
 func (*AuthControllerImpl) HashPassword(password string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
 	return string(bytes), err
+}
+
+// CheckEmail implements AuthController
+func (controller *AuthControllerImpl) CheckEmail(ctx *gin.Context, email string) bool {
+	check := controller.AuthService.CheckEmail(ctx, email)
+	return check
+}
+
+// CheckUsername implements AuthController
+func (controller *AuthControllerImpl) CheckUsername(ctx *gin.Context, username string) bool {
+	check := controller.AuthService.CheckUsername(ctx, username)
+	return check
 }
