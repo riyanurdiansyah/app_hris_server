@@ -7,6 +7,7 @@ type User struct {
 	Password    string `gorm:"column:password"`
 	PhoneNumber string `gorm:"column:phone_number"`
 	SignupWith  int    `gorm:"column:signup_with"`
+	Role        int    `gorm:"column:role"`
 	CreatedAt   string `gorm:"column:created_at"`
 	UpdatedAt   string `gorm:"column:updated_at"`
 }

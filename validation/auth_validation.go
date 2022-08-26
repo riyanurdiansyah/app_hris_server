@@ -11,10 +11,8 @@ func SignUpValidation(txterror string) string {
 		return "parameter username tidak boleh kosong"
 	} else if strings.Contains(strings.ToLower(txterror), "signup") {
 		return "parameter register_by tidak boleh kosong"
-	} else if strings.Contains(strings.ToLower(txterror), "created") {
-		return "parameter created_at tidak boleh kosong"
-	} else if strings.Contains(strings.ToLower(txterror), "updated") {
-		return "parameter updated_at tidak boleh kosong"
+	} else if strings.Contains(strings.ToLower(txterror), "role") {
+		return "parameter role tidak boleh kosong"
 	} else {
 		return "gagal terhubung keserver"
 	}

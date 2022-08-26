@@ -28,6 +28,8 @@ func (controller *AuthControllerImpl) SignUp(c *gin.Context) {
 	userCreateRequest := dto.UserCreateDTO{}
 	helper.ReadFromRequestBody(c.Request, &userCreateRequest)
 
+	println("CHECK ROLE ", userCreateRequest.Role)
+
 	checkEmail := controller.CheckEmail(c, userCreateRequest.Email)
 	checkUsername := controller.CheckUsername(c, userCreateRequest.Username)
 	if checkEmail {

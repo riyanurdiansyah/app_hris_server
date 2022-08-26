@@ -54,6 +54,7 @@ func (service *AuthServiceImpl) SignUp(ctx *gin.Context, request *dto.UserCreate
 			Password:    request.Password,
 			PhoneNumber: request.PhoneNumber,
 			SignupWith:  request.SignupWith,
+			Role:        request.Role,
 			CreatedAt:   time.Now().Local().String(),
 			UpdatedAt:   time.Now().Local().String(),
 		}
