@@ -79,7 +79,7 @@ func (controller *PromoControllerImpl) InsertPromo(c *gin.Context) {
 				}
 				c.JSON(http.StatusBadRequest, responses)
 			} else {
-				checkPath := "assets/promos"
+				checkPath := "assets/images/promos"
 				if _, err := os.Stat(checkPath); errors.Is(err, os.ErrNotExist) {
 					err := os.Mkdir(checkPath, os.ModePerm)
 					if err != nil {
@@ -87,7 +87,7 @@ func (controller *PromoControllerImpl) InsertPromo(c *gin.Context) {
 					}
 				}
 
-				path := "assets/promos/" + strings.ToLower(strings.ReplaceAll(promoCreateRequest.Name, " ", "_")) + formatFile
+				path := "assets/images/promos/" + strings.ToLower(strings.ReplaceAll(promoCreateRequest.Name, " ", "_")) + formatFile
 				errUpload := c.SaveUploadedFile(promoCreateRequest.Image, path)
 				if errUpload != nil {
 					responses := helper.DefaultResponse{
@@ -98,7 +98,7 @@ func (controller *PromoControllerImpl) InsertPromo(c *gin.Context) {
 					}
 					c.JSON(http.StatusBadRequest, responses)
 				} else {
-					promoCreateRequest.Path = path
+					promoCreateRequest.Path = "/" + path
 					promoResponse := controller.PromoService.InsertPromo(&promoCreateRequest)
 					if promoResponse.Error {
 						responses := helper.DefaultResponse{

@@ -67,7 +67,7 @@ func (controller *CategoryControllerImpl) InsertCategory(c *gin.Context) {
 				}
 				c.JSON(http.StatusBadRequest, responses)
 			} else {
-				checkPath := "assets/categories"
+				checkPath := "assets/images/categories"
 				if _, err := os.Stat(checkPath); errors.Is(err, os.ErrNotExist) {
 					err := os.Mkdir(checkPath, os.ModePerm)
 					if err != nil {
@@ -75,7 +75,7 @@ func (controller *CategoryControllerImpl) InsertCategory(c *gin.Context) {
 					}
 				}
 
-				path := "assets/categories/" + strings.ToLower(strings.ReplaceAll(categoryCreateRequest.Name, " ", "_")) + formatFile
+				path := "assets/images/categories/" + strings.ToLower(strings.ReplaceAll(categoryCreateRequest.Name, " ", "_")) + formatFile
 				errUpload := c.SaveUploadedFile(categoryCreateRequest.Image, path)
 				if errUpload != nil {
 					responses := helper.DefaultResponse{
@@ -86,7 +86,7 @@ func (controller *CategoryControllerImpl) InsertCategory(c *gin.Context) {
 					}
 					c.JSON(http.StatusBadRequest, responses)
 				} else {
-					categoryCreateRequest.Path = path
+					categoryCreateRequest.Path = "/" + path
 					categoryResponse := controller.CategoryService.InsertCategory(&categoryCreateRequest)
 					if categoryResponse.Error {
 						responses := helper.DefaultResponse{
