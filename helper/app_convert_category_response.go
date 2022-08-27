@@ -9,6 +9,7 @@ func ToCategoryResponseDTO(category *entity.Category) *dto.CategoryResponseDTO {
 	return &dto.CategoryResponseDTO{
 		Id:      category.ID,
 		Name:    category.Name,
+		Image:   category.Image,
 		Created: category.CreatedAt,
 		Updated: category.UpdatedAt,
 	}
@@ -20,6 +21,7 @@ func ToListCategoryResponseDTO(category []*entity.Category) []*dto.CategoryRespo
 		listTemp = append(listTemp, &dto.CategoryResponseDTO{
 			Id:      data.ID,
 			Name:    data.Name,
+			Image:   data.Image,
 			Created: data.CreatedAt,
 			Updated: data.UpdatedAt,
 		})

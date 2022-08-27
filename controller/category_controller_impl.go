@@ -4,8 +4,12 @@ import (
 	"app-ecommerce-server/data/dto"
 	"app-ecommerce-server/helper"
 	"app-ecommerce-server/service"
+	"errors"
+	"log"
 	"net/http"
+	"os"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -22,25 +26,91 @@ func NewCategoryController(categoryService service.CategoryService) CategoryCont
 
 func (controller *CategoryControllerImpl) InsertCategory(c *gin.Context) {
 	categoryCreateRequest := dto.CategoryCreateDTO{}
-	helper.ReadFromRequestBody(c.Request, &categoryCreateRequest)
+	// helper.ReadFromRequestBody(c.Request, &categoryCreateRequest)
 
-	categoryResponse := controller.CategoryService.InsertCategory(c, &categoryCreateRequest)
-	if categoryResponse.Error {
+	// var categoryObjImage dto.CategoryImageDTO
+	err := c.ShouldBind(&categoryCreateRequest)
+
+	if err != nil {
 		responses := helper.DefaultResponse{
 			Code:    http.StatusBadRequest,
-			Message: categoryResponse.Message,
+			Message: "please check your image file",
 			Data:    helper.ObjectKosongResponse{},
 			Status:  false,
 		}
 		c.JSON(http.StatusBadRequest, responses)
 	} else {
-		responses := helper.DefaultResponse{
-			Code:    http.StatusOK,
-			Message: "New category has been added",
-			Data:    categoryResponse,
-			Status:  true,
+		errBind := c.ShouldBindUri(&categoryCreateRequest)
+		if errBind != nil {
+			responses := helper.DefaultResponse{
+				Code:    http.StatusBadRequest,
+				Message: "please check your file image",
+				Data:    helper.ObjectKosongResponse{},
+				Status:  false,
+			}
+			c.JSON(http.StatusBadRequest, responses)
+		} else {
+			var formatFile string
+			if strings.Contains(categoryCreateRequest.Image.Filename, "jpg") {
+				formatFile = ".jpg"
+			} else if strings.Contains(categoryCreateRequest.Image.Filename, "jpeg") {
+				formatFile = ".jpeg"
+			} else if strings.Contains(categoryCreateRequest.Image.Filename, "png") {
+				formatFile = ".png"
+			} else {
+				formatFile = ""
+			}
+
+			if formatFile == "" {
+				responses := helper.DefaultResponse{
+					Code:    http.StatusBadRequest,
+					Message: "format file must .jpg/.jpeg/.png",
+					Data:    helper.ObjectKosongResponse{},
+					Status:  false,
+				}
+				c.JSON(http.StatusBadRequest, responses)
+			} else {
+				checkPath := "assets/categories"
+				if _, err := os.Stat(checkPath); errors.Is(err, os.ErrNotExist) {
+					err := os.Mkdir(checkPath, os.ModePerm)
+					if err != nil {
+						log.Println(err)
+					}
+				}
+
+				path := "assets/categories/" + strings.ToLower(strings.ReplaceAll(categoryCreateRequest.Name, " ", "_")) + formatFile
+				errUpload := c.SaveUploadedFile(categoryCreateRequest.Image, path)
+				if errUpload != nil {
+					responses := helper.DefaultResponse{
+						Code:    http.StatusBadRequest,
+						Message: errUpload.Error(),
+						Data:    helper.ObjectKosongResponse{},
+						Status:  false,
+					}
+					c.JSON(http.StatusBadRequest, responses)
+				} else {
+					categoryCreateRequest.Path = path
+					categoryResponse := controller.CategoryService.InsertCategory(c, &categoryCreateRequest)
+					if categoryResponse.Error {
+						responses := helper.DefaultResponse{
+							Code:    http.StatusBadRequest,
+							Message: categoryResponse.Message,
+							Data:    helper.ObjectKosongResponse{},
+							Status:  false,
+						}
+						c.JSON(http.StatusBadRequest, responses)
+					} else {
+						responses := helper.DefaultResponse{
+							Code:    http.StatusOK,
+							Message: "New category has been added",
+							Data:    categoryResponse,
+							Status:  true,
+						}
+						c.JSON(http.StatusOK, responses)
+					}
+				}
+			}
 		}
-		c.JSON(http.StatusOK, responses)
 	}
 }
 

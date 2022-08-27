@@ -48,6 +48,7 @@ func (service *CategoryServiceImpl) InsertCategory(ctx *gin.Context, request *dt
 	} else {
 		category := entity.Category{
 			Name:      request.Name,
+			Image:     request.Path,
 			CreatedAt: time.Now().Local().String(),
 			UpdatedAt: time.Now().Local().String(),
 		}

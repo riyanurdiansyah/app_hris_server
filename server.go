@@ -6,10 +6,16 @@ import (
 	"app-ecommerce-server/middleware"
 	"app-ecommerce-server/repository"
 	"app-ecommerce-server/service"
+	"mime/multipart"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator"
 )
+
+type CategoryObj struct {
+	Name   string                `form:"name"`
+	Avatar *multipart.FileHeader `form:"avatar" binding:"required"`
+}
 
 func main() {
 	validate := validator.New()
@@ -42,5 +48,6 @@ func main() {
 			categories.DELETE("/:id", categoryController.DeleteCategory)
 		}
 	}
+	r.Static("assets", "./assets")
 	r.Run()
 }
