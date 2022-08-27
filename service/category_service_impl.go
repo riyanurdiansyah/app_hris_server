@@ -111,14 +111,24 @@ func (service *CategoryServiceImpl) UpdateCategory(ctx *gin.Context, request *dt
 			Message: "terjadi kesalahan... silahkan coba beberapa saat lagi",
 		}
 	} else {
-		category := entity.Category{
-			ID:        request.Id,
-			Name:      request.Name,
-			UpdatedAt: time.Now().Local().String(),
+
+		category := service.CategoryRepository.FindByIdCategory(ctx, tx, request.Id)
+		if category.Name == "" {
+			return &dto.CategoryResponseDTO{
+				Error:   true,
+				Message: "id is not found",
+			}
+		} else {
+			categorys := entity.Category{
+				ID:        request.Id,
+				Name:      request.Name,
+				CreatedAt: category.CreatedAt,
+				UpdatedAt: time.Now().Local().String(),
+			}
+
+			categoryResponse := service.CategoryRepository.UpdateCategory(ctx, tx, &categorys)
+
+			return helper.ToCategoryResponseDTO(categoryResponse)
 		}
-
-		categoryResponse := service.CategoryRepository.UpdateCategory(ctx, tx, &category)
-
-		return helper.ToCategoryResponseDTO(categoryResponse)
 	}
 }

@@ -8,16 +8,12 @@ type CategoryDTO struct {
 }
 
 type CategoryCreateDTO struct {
-	Name    string `validate:"required,min=1" json:"name"`
-	Created string `json:"created_at"`
-	Updated string `json:"updated_at"`
+	Name string `validate:"required,min=1" json:"name"`
 }
 
 type CategoryUpdateDTO struct {
-	Id      int    `json:"id"`
-	Name    string `json:"name"`
-	Created string `json:"created_at"`
-	Updated string `json:"updated_at"`
+	Id   int    `json:"id"`
+	Name string `json:"name"`
 }
 
 type CategoryResponseDTO struct {
