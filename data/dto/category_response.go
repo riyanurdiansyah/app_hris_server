@@ -1,12 +1,11 @@
-package helper
+package dto
 
 import (
-	"app-ecommerce-server/data/dto"
 	"app-ecommerce-server/data/entity"
 )
 
-func ToCategoryResponseDTO(category *entity.Category) *dto.CategoryResponseDTO {
-	return &dto.CategoryResponseDTO{
+func ToCategoryResponseDTO(category *entity.Category) *CategoryResponseDTO {
+	return &CategoryResponseDTO{
 		Id:      category.ID,
 		Name:    category.Name,
 		Image:   category.Image,
@@ -15,10 +14,10 @@ func ToCategoryResponseDTO(category *entity.Category) *dto.CategoryResponseDTO {
 	}
 }
 
-func ToListCategoryResponseDTO(category []*entity.Category) []*dto.CategoryResponseDTO {
-	var listTemp = []*dto.CategoryResponseDTO{}
+func ToListCategoryResponseDTO(category []*entity.Category) []*CategoryResponseDTO {
+	var listTemp = []*CategoryResponseDTO{}
 	for _, data := range category {
-		listTemp = append(listTemp, &dto.CategoryResponseDTO{
+		listTemp = append(listTemp, &CategoryResponseDTO{
 			Id:      data.ID,
 			Name:    data.Name,
 			Image:   data.Image,

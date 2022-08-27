@@ -26,9 +26,6 @@ func NewCategoryController(categoryService service.CategoryService) CategoryCont
 
 func (controller *CategoryControllerImpl) InsertCategory(c *gin.Context) {
 	categoryCreateRequest := dto.CategoryCreateDTO{}
-	// helper.ReadFromRequestBody(c.Request, &categoryCreateRequest)
-
-	// var categoryObjImage dto.CategoryImageDTO
 	err := c.ShouldBind(&categoryCreateRequest)
 
 	if err != nil {

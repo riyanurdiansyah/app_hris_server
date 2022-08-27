@@ -2,7 +2,7 @@ package validation
 
 import "strings"
 
-func SignUpValidation(txterror string) string {
+func TextValidation(txterror string) string {
 	if strings.Contains(strings.ToLower(txterror), "name") {
 		return "parameter name tidak boleh kosong"
 	} else if strings.Contains(strings.ToLower(txterror), "password") {

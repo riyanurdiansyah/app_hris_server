@@ -1,12 +1,11 @@
-package helper
+package dto
 
 import (
-	"app-ecommerce-server/data/dto"
 	"app-ecommerce-server/data/entity"
 )
 
-func ToAuthResponseDTO(user *entity.User) *dto.UserResponseDTO {
-	return &dto.UserResponseDTO{
+func ToAuthResponseDTO(user *entity.User) *UserResponseDTO {
+	return &UserResponseDTO{
 		Id:          user.ID,
 		Username:    user.Username,
 		Email:       user.Email,
@@ -19,10 +18,10 @@ func ToAuthResponseDTO(user *entity.User) *dto.UserResponseDTO {
 	}
 }
 
-func ToListAuthResponseDTO(user []*entity.User) []*dto.UserResponseDTO {
-	var listTemp = []*dto.UserResponseDTO{}
+func ToListAuthResponseDTO(user []*entity.User) []*UserResponseDTO {
+	var listTemp = []*UserResponseDTO{}
 	for _, data := range user {
-		listTemp = append(listTemp, &dto.UserResponseDTO{
+		listTemp = append(listTemp, &UserResponseDTO{
 			Id:          data.ID,
 			Username:    data.Username,
 			Email:       data.Email,

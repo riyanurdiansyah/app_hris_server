@@ -20,6 +20,7 @@ type CategoryObj struct {
 func main() {
 	validate := validator.New()
 	db := config.SetupGetConnection()
+	jwtService := service.NewJWTService()
 
 	categoryRepository := repository.NewCategoryRepository()
 	categoryService := service.NewCategoryService(categoryRepository, db, validate)
@@ -27,8 +28,11 @@ func main() {
 
 	authRepository := repository.NewAuthRepository()
 	authService := service.NewAuthService(authRepository, db, validate)
-	jwtService := service.NewJWTService()
 	authController := controller.NewAuthController(authService, jwtService)
+
+	promoRepository := repository.NewPromoRepository()
+	promoService := service.NewPromoService(promoRepository, db, validate)
+	promoController := controller.NewPromoController(promoService)
 
 	r := gin.Default()
 	v1 := r.Group("/api/v1")
@@ -46,6 +50,11 @@ func main() {
 			categories.GET("/:id", categoryController.FindByIdCategory)
 			categories.PUT("", categoryController.UpdateCategory)
 			categories.DELETE("/:id", categoryController.DeleteCategory)
+		}
+		promos := v1.Group("/promos", middleware.AuthorizeJWT(jwtService))
+		{
+			promos.POST("", promoController.InsertPromo)
+			promos.GET("", promoController.GetAllPromo)
 		}
 	}
 	r.Static("assets", "./assets")

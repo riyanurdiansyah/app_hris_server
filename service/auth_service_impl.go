@@ -33,7 +33,7 @@ func NewAuthService(authRepository repository.AuthRepository, DB *gorm.DB, valid
 func (service *AuthServiceImpl) SignUp(ctx *gin.Context, request *dto.UserCreateDTO) *dto.UserResponseDTO {
 	errorValidation := service.Validate.Struct(request)
 	if errorValidation != nil {
-		msgError := validation.SignUpValidation(errorValidation.Error())
+		msgError := validation.TextValidation(errorValidation.Error())
 		return &dto.UserResponseDTO{
 			Error:   true,
 			Message: msgError,
@@ -42,7 +42,7 @@ func (service *AuthServiceImpl) SignUp(ctx *gin.Context, request *dto.UserCreate
 	tx := service.DB.Begin()
 	defer helper.CommitOrRollback(tx)
 	if tx.Error != nil {
-		msgError := validation.SignUpValidation(tx.Error.Error())
+		msgError := validation.TextValidation(tx.Error.Error())
 		return &dto.UserResponseDTO{
 			Error:   true,
 			Message: msgError,
@@ -61,15 +61,15 @@ func (service *AuthServiceImpl) SignUp(ctx *gin.Context, request *dto.UserCreate
 
 		userResponse := service.AuthRepository.SignUp(ctx, tx, &user)
 
-		return helper.ToAuthResponseDTO(userResponse)
+		return dto.ToAuthResponseDTO(userResponse)
 	}
 }
 
 // FindUserByEmail implements AuthService
-func (service *AuthServiceImpl) FindUserByEmail(ctx *gin.Context, request *dto.UserLoginDTO) *dto.UserResponseDTO {
+func (service *AuthServiceImpl) FindUserByEmail(ctx *gin.Context, request *dto.UserLoginEmailDTO) *dto.UserResponseDTO {
 	errorValidation := service.Validate.Struct(request)
 	if errorValidation != nil {
-		msgError := validation.SignUpValidation(errorValidation.Error())
+		msgError := validation.TextValidation(errorValidation.Error())
 		return &dto.UserResponseDTO{
 			Error:   true,
 			Message: msgError,
@@ -78,22 +78,22 @@ func (service *AuthServiceImpl) FindUserByEmail(ctx *gin.Context, request *dto.U
 	tx := service.DB.Begin()
 	defer helper.CommitOrRollback(tx)
 	if tx.Error != nil {
-		msgError := validation.SignUpValidation(tx.Error.Error())
+		msgError := validation.TextValidation(tx.Error.Error())
 		return &dto.UserResponseDTO{
 			Error:   true,
 			Message: msgError,
 		}
 	} else {
 		userResponse := service.AuthRepository.FindUserByEmail(ctx, tx, request.Email)
-		return helper.ToAuthResponseDTO(userResponse)
+		return dto.ToAuthResponseDTO(userResponse)
 	}
 }
 
 // FindUserByUsername implements AuthService
-func (service *AuthServiceImpl) FindUserByUsername(ctx *gin.Context, request *dto.UserLoginDTO) *dto.UserResponseDTO {
+func (service *AuthServiceImpl) FindUserByUsername(ctx *gin.Context, request *dto.UserLoginUsernameDTO) *dto.UserResponseDTO {
 	errorValidation := service.Validate.Struct(request)
 	if errorValidation != nil {
-		msgError := validation.SignUpValidation(errorValidation.Error())
+		msgError := validation.TextValidation(errorValidation.Error())
 		return &dto.UserResponseDTO{
 			Error:   true,
 			Message: msgError,
@@ -102,14 +102,14 @@ func (service *AuthServiceImpl) FindUserByUsername(ctx *gin.Context, request *dt
 	tx := service.DB.Begin()
 	defer helper.CommitOrRollback(tx)
 	if tx.Error != nil {
-		msgError := validation.SignUpValidation(tx.Error.Error())
+		msgError := validation.TextValidation(tx.Error.Error())
 		return &dto.UserResponseDTO{
 			Error:   true,
 			Message: msgError,
 		}
 	} else {
 		userResponse := service.AuthRepository.FindUserByUsername(ctx, tx, request.Username)
-		return helper.ToAuthResponseDTO(userResponse)
+		return dto.ToAuthResponseDTO(userResponse)
 	}
 }
 

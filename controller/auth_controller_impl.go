@@ -25,13 +25,14 @@ func NewAuthController(authService service.AuthService, jwtService service.JWTSe
 
 // SigninWithUsername implements AuthController
 func (controller *AuthControllerImpl) SigninWithUsername(c *gin.Context) {
-	userLoginRequest := dto.UserLoginDTO{}
+	userLoginRequest := dto.UserLoginUsernameDTO{}
 	helper.ReadFromRequestBody(c.Request, &userLoginRequest)
 	userResponse := controller.AuthService.FindUserByUsername(c, &userLoginRequest)
 	if userResponse.Username == "" {
 		responses := helper.DefaultResponse{
 			Code:    http.StatusBadRequest,
 			Message: "Username is not register",
+			Status:  false,
 			Data:    helper.ObjectKosongResponse{},
 		}
 		c.JSON(http.StatusBadRequest, responses)
@@ -42,6 +43,7 @@ func (controller *AuthControllerImpl) SigninWithUsername(c *gin.Context) {
 			responses := helper.DefaultLoginResponse{
 				Code:    http.StatusOK,
 				Message: "Login is successfull",
+				Status:  true,
 				Data:    userResponse,
 				Token:   token,
 			}
@@ -50,6 +52,7 @@ func (controller *AuthControllerImpl) SigninWithUsername(c *gin.Context) {
 			responses := helper.DefaultResponse{
 				Code:    http.StatusBadRequest,
 				Message: "Password is wrong",
+				Status:  false,
 				Data:    helper.ObjectKosongResponse{},
 			}
 			c.JSON(http.StatusBadRequest, responses)
@@ -107,12 +110,13 @@ func (controller *AuthControllerImpl) SignUp(c *gin.Context) {
 
 // FindUserByEmail implements AuthController
 func (controller *AuthControllerImpl) FindUserByEmail(c *gin.Context) {
-	userLoginRequest := dto.UserLoginDTO{}
+	userLoginRequest := dto.UserLoginEmailDTO{}
 	helper.ReadFromRequestBody(c.Request, &userLoginRequest)
 	user := controller.AuthService.FindUserByEmail(c, &userLoginRequest)
 	responses := helper.DefaultLoginResponse{
 		Code:    http.StatusOK,
 		Message: "Signin is successfull",
+		Status:  true,
 		Data:    user,
 	}
 	c.JSON(http.StatusOK, responses)
@@ -120,12 +124,13 @@ func (controller *AuthControllerImpl) FindUserByEmail(c *gin.Context) {
 
 // FindUserByUsername implements AuthController
 func (controller *AuthControllerImpl) FindUserByUsername(c *gin.Context) {
-	userLoginRequest := dto.UserLoginDTO{}
+	userLoginRequest := dto.UserLoginUsernameDTO{}
 	helper.ReadFromRequestBody(c.Request, &userLoginRequest)
 	user := controller.AuthService.FindUserByUsername(c, &userLoginRequest)
 	responses := helper.DefaultResponse{
 		Code:    http.StatusOK,
 		Message: "Signin is successfull",
+		Status:  true,
 		Data:    user,
 	}
 	c.JSON(http.StatusOK, responses)

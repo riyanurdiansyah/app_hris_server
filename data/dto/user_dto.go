@@ -23,12 +23,15 @@ type UserCreateDTO struct {
 	Updated     string `json:"updated_at"`
 }
 
-type UserLoginDTO struct {
-	Email    string `validate:"required,min=1" json:"email"`
+type UserLoginUsernameDTO struct {
 	Username string `validate:"required,min=1" json:"username"`
 	Password string `validate:"required,min=8" json:"password"`
 }
 
+type UserLoginEmailDTO struct {
+	Email    string `validate:"required,min=1" json:"email"`
+	Password string `validate:"required,min=8" json:"password"`
+}
 type UserResponseDTO struct {
 	Id          int    `json:"id"`
 	Username    string `json:"username"`
