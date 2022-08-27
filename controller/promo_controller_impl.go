@@ -25,7 +25,7 @@ func NewPromoController(promoService service.PromoService) PromoController {
 
 // GetAllPromo implements PromoController
 func (controller *PromoControllerImpl) GetAllPromo(c *gin.Context) {
-	categoryResponse := controller.PromoService.GetAllPromo(c)
+	categoryResponse := controller.PromoService.GetAllPromo()
 	responses := helper.DefaultResponse{
 		Code:    http.StatusOK,
 		Message: "Data promo has been listed",
@@ -99,7 +99,7 @@ func (controller *PromoControllerImpl) InsertPromo(c *gin.Context) {
 					c.JSON(http.StatusBadRequest, responses)
 				} else {
 					promoCreateRequest.Path = path
-					promoResponse := controller.PromoService.InsertPromo(c, &promoCreateRequest)
+					promoResponse := controller.PromoService.InsertPromo(&promoCreateRequest)
 					if promoResponse.Error {
 						responses := helper.DefaultResponse{
 							Code:    http.StatusBadRequest,

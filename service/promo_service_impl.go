@@ -8,7 +8,6 @@ import (
 	"app-ecommerce-server/validation"
 	"time"
 
-	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator"
 	"gorm.io/gorm"
 )
@@ -29,19 +28,19 @@ func NewPromoService(promoRepository repository.PromoRepository, DB *gorm.DB, va
 }
 
 // GetAllPromo implements PromoService
-func (service *PromoServiceImpl) GetAllPromo(ctx *gin.Context) []*dto.PromoResponseDTO {
+func (service *PromoServiceImpl) GetAllPromo() []*dto.PromoResponseDTO {
 	tx := service.DB.Begin()
 	defer helper.CommitOrRollback(tx)
 	if tx.Error != nil {
 		return []*dto.PromoResponseDTO{}
 	} else {
-		listPromo := service.PromoRepository.GetAllPromo(ctx, tx)
+		listPromo := service.PromoRepository.GetAllPromo(tx)
 		return dto.ToListPromoResponseDTO(listPromo)
 	}
 }
 
 // InsertPromo implements PromoService
-func (service *PromoServiceImpl) InsertPromo(ctx *gin.Context, request *dto.PromoCreateDTO) *dto.PromoResponseDTO {
+func (service *PromoServiceImpl) InsertPromo(request *dto.PromoCreateDTO) *dto.PromoResponseDTO {
 	errorValidation := service.Validate.Struct(request)
 	if errorValidation != nil {
 		msgError := validation.TextValidation(errorValidation.Error())
@@ -70,7 +69,7 @@ func (service *PromoServiceImpl) InsertPromo(ctx *gin.Context, request *dto.Prom
 			UpdatedAt:   time.Now().Local().String(),
 		}
 
-		promoResponse := service.PromoRepository.InsertPromo(ctx, tx, &promo)
+		promoResponse := service.PromoRepository.InsertPromo(tx, &promo)
 
 		return dto.ToPromoResponseDTO(promoResponse)
 	}

@@ -4,7 +4,6 @@ import (
 	"app-ecommerce-server/data/entity"
 	"app-ecommerce-server/helper"
 
-	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
@@ -16,7 +15,7 @@ func NewPromoRepository() PromoRepository {
 }
 
 // InsertPromo implements PromoRepository
-func (repo *PromoRepositoryImpl) InsertPromo(c *gin.Context, db *gorm.DB, promo *entity.Promo) *entity.Promo {
+func (repo *PromoRepositoryImpl) InsertPromo(db *gorm.DB, promo *entity.Promo) *entity.Promo {
 	result := db.Table("promos_slider").Select("*").Create(&promo)
 	if result.Error != nil {
 		promo.ID = -99
@@ -27,7 +26,7 @@ func (repo *PromoRepositoryImpl) InsertPromo(c *gin.Context, db *gorm.DB, promo 
 }
 
 // GetAllPromo implements PromoRepository
-func (*PromoRepositoryImpl) GetAllPromo(c *gin.Context, db *gorm.DB) []*entity.Promo {
+func (*PromoRepositoryImpl) GetAllPromo(db *gorm.DB) []*entity.Promo {
 	var listPromo = []*entity.Promo{}
 	result :=
 		db.Table("promos_slider").Select("*").Scan(&listPromo)
