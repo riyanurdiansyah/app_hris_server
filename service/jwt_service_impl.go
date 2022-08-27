@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/joho/godotenv"
 )
 
 type JWTCustomClaim struct {
@@ -22,42 +23,49 @@ type JWTServiceImpl struct {
 
 func NewJWTService() JWTService {
 	return &JWTServiceImpl{
-		secretKey: "riyanurdiansyah",
+		secretKey: "riyansecret",
 		issuer:    getSecretKey(),
 	}
 }
 
 func getSecretKey() string {
+	err := godotenv.Load(".env")
+	helper.PanicIfError(err)
 	secretKey := os.Getenv("JWT_SECRET_KEY")
 	if secretKey != "" {
-		secretKey = "riyan"
+		secretKey = "riyansecret"
 	}
 	return secretKey
 }
 
 func (service *JWTServiceImpl) GenerateToken(UserId string, Email string) string {
+	err := godotenv.Load(".env")
+	helper.PanicIfError(err)
+	secretKey := os.Getenv("JWT_SECRET_KEY")
 	claims := &JWTCustomClaim{
 		UserId: UserId,
 		Email:  Email,
 		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(time.Duration(time.Now().Hour() + 1)).Unix(),
-			Issuer:    service.issuer,
+			ExpiresAt: time.Now().Add(30 * time.Minute).Unix(),
+			Issuer:    "rsyahproject.co.id",
 			IssuedAt:  time.Now().Unix(),
-			Id:        UserId,
 		},
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	t, err := token.SignedString([]byte(service.secretKey))
+	t, err := token.SignedString([]byte(secretKey))
 	helper.PanicIfError(err)
 	return t
 }
 
 func (service *JWTServiceImpl) ValidateToken(token string) (*jwt.Token, error) {
+	err := godotenv.Load(".env")
+	helper.PanicIfError(err)
+	secretKey := os.Getenv("JWT_SECRET_KEY")
 	return jwt.Parse(token, func(t *jwt.Token) (interface{}, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method %v", t.Header["alg"])
 		}
-		return []byte(service.secretKey), nil
+		return []byte(secretKey), nil
 	})
 }

@@ -3,6 +3,7 @@ package main
 import (
 	"app-ecommerce-server/config"
 	"app-ecommerce-server/controller"
+	"app-ecommerce-server/middleware"
 	"app-ecommerce-server/repository"
 	"app-ecommerce-server/service"
 
@@ -32,7 +33,7 @@ func main() {
 			auth.POST("/find", authController.FindUserByUsername)
 			auth.POST("/signin", authController.SigninWithUsername)
 		}
-		categories := v1.Group("/categories")
+		categories := v1.Group("/categories", middleware.AuthorizeJWT(jwtService))
 		{
 			categories.POST("", categoryController.InsertCategory)
 			categories.GET("", categoryController.FindAllCategory)

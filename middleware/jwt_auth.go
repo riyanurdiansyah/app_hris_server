@@ -4,6 +4,7 @@ import (
 	"app-ecommerce-server/helper"
 	"app-ecommerce-server/service"
 	"net/http"
+	"strings"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
@@ -20,7 +21,8 @@ func AuthorizeJWT(jwtService service.JWTService) gin.HandlerFunc {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, response)
 			return
 		}
-		token, err := jwtService.ValidateToken(authHeader)
+		splitToken := strings.Split(authHeader, "Bearer ")
+		token, err := jwtService.ValidateToken(splitToken[1])
 		if token.Valid {
 			claims := token.Claims.(jwt.MapClaims)
 			println("USER ID ", claims["user_id"])
