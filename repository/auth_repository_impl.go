@@ -3,7 +3,6 @@ package repository
 import (
 	"app-ecommerce-server/data/entity"
 
-	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
@@ -15,7 +14,7 @@ func NewAuthRepository() AuthRepository {
 }
 
 // SignUp implements AuthRepository
-func (repo *AuthRepositoryImpl) SignUp(c *gin.Context, db *gorm.DB, user *entity.User) *entity.User {
+func (repo *AuthRepositoryImpl) SignUp(db *gorm.DB, user *entity.User) *entity.User {
 	result := db.Table("users").Select("*").Create(&user)
 	if result.Error != nil {
 		user.ID = -99
@@ -26,7 +25,7 @@ func (repo *AuthRepositoryImpl) SignUp(c *gin.Context, db *gorm.DB, user *entity
 }
 
 // FindUserByEmail implements AuthRepository
-func (*AuthRepositoryImpl) FindUserByEmail(c *gin.Context, db *gorm.DB, email string) *entity.User {
+func (*AuthRepositoryImpl) FindUserByEmail(db *gorm.DB, email string) *entity.User {
 	var user = entity.User{}
 	result := db.Table("users").Select("*").Where("email = ?", email).Scan(&user)
 	if result.Error != nil {
@@ -37,7 +36,7 @@ func (*AuthRepositoryImpl) FindUserByEmail(c *gin.Context, db *gorm.DB, email st
 }
 
 // FindUserByUsername implements AuthRepository
-func (*AuthRepositoryImpl) FindUserByUsername(c *gin.Context, db *gorm.DB, username string) *entity.User {
+func (*AuthRepositoryImpl) FindUserByUsername(db *gorm.DB, username string) *entity.User {
 	var user = entity.User{}
 	result := db.Table("users").Select("*").Where("username = ?", username).Scan(&user)
 	if result.Error != nil {
@@ -48,7 +47,7 @@ func (*AuthRepositoryImpl) FindUserByUsername(c *gin.Context, db *gorm.DB, usern
 }
 
 // CheckEmail implements AuthRepository
-func (*AuthRepositoryImpl) CheckEmail(c *gin.Context, db *gorm.DB, email string) bool {
+func (*AuthRepositoryImpl) CheckEmail(db *gorm.DB, email string) bool {
 	var user = entity.User{}
 	db.Table("users").Select("*").Where("email = ?", email).Scan(&user)
 	if user.Email == "" {
@@ -59,7 +58,7 @@ func (*AuthRepositoryImpl) CheckEmail(c *gin.Context, db *gorm.DB, email string)
 }
 
 // CheckUsername implements AuthRepository
-func (*AuthRepositoryImpl) CheckUsername(c *gin.Context, db *gorm.DB, username string) bool {
+func (*AuthRepositoryImpl) CheckUsername(db *gorm.DB, username string) bool {
 	var user = entity.User{}
 	db.Table("users").Select("*").Where("username = ?", username).Scan(&user)
 	if user.Username == "" {

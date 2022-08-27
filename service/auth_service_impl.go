@@ -8,7 +8,6 @@ import (
 	"app-ecommerce-server/validation"
 	"time"
 
-	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator"
 	"gorm.io/gorm"
 )
@@ -30,7 +29,7 @@ func NewAuthService(authRepository repository.AuthRepository, DB *gorm.DB, valid
 }
 
 // SignUp implements AuthService
-func (service *AuthServiceImpl) SignUp(ctx *gin.Context, request *dto.UserCreateDTO) *dto.UserResponseDTO {
+func (service *AuthServiceImpl) SignUp(request *dto.UserCreateDTO) *dto.UserResponseDTO {
 	errorValidation := service.Validate.Struct(request)
 	if errorValidation != nil {
 		msgError := validation.TextValidation(errorValidation.Error())
@@ -59,14 +58,14 @@ func (service *AuthServiceImpl) SignUp(ctx *gin.Context, request *dto.UserCreate
 			UpdatedAt:   time.Now().Local().String(),
 		}
 
-		userResponse := service.AuthRepository.SignUp(ctx, tx, &user)
+		userResponse := service.AuthRepository.SignUp(tx, &user)
 
 		return dto.ToAuthResponseDTO(userResponse)
 	}
 }
 
 // FindUserByEmail implements AuthService
-func (service *AuthServiceImpl) FindUserByEmail(ctx *gin.Context, request *dto.UserLoginEmailDTO) *dto.UserResponseDTO {
+func (service *AuthServiceImpl) FindUserByEmail(request *dto.UserLoginEmailDTO) *dto.UserResponseDTO {
 	errorValidation := service.Validate.Struct(request)
 	if errorValidation != nil {
 		msgError := validation.TextValidation(errorValidation.Error())
@@ -84,13 +83,13 @@ func (service *AuthServiceImpl) FindUserByEmail(ctx *gin.Context, request *dto.U
 			Message: msgError,
 		}
 	} else {
-		userResponse := service.AuthRepository.FindUserByEmail(ctx, tx, request.Email)
+		userResponse := service.AuthRepository.FindUserByEmail(tx, request.Email)
 		return dto.ToAuthResponseDTO(userResponse)
 	}
 }
 
 // FindUserByUsername implements AuthService
-func (service *AuthServiceImpl) FindUserByUsername(ctx *gin.Context, request *dto.UserLoginUsernameDTO) *dto.UserResponseDTO {
+func (service *AuthServiceImpl) FindUserByUsername(request *dto.UserLoginUsernameDTO) *dto.UserResponseDTO {
 	errorValidation := service.Validate.Struct(request)
 	if errorValidation != nil {
 		msgError := validation.TextValidation(errorValidation.Error())
@@ -108,31 +107,31 @@ func (service *AuthServiceImpl) FindUserByUsername(ctx *gin.Context, request *dt
 			Message: msgError,
 		}
 	} else {
-		userResponse := service.AuthRepository.FindUserByUsername(ctx, tx, request.Username)
+		userResponse := service.AuthRepository.FindUserByUsername(tx, request.Username)
 		return dto.ToAuthResponseDTO(userResponse)
 	}
 }
 
 // CheckEmail implements AuthService
-func (service *AuthServiceImpl) CheckEmail(ctx *gin.Context, email string) bool {
+func (service *AuthServiceImpl) CheckEmail(email string) bool {
 	tx := service.DB.Begin()
 	defer helper.CommitOrRollback(tx)
 	if tx.Error != nil {
 		return true
 	} else {
-		result := service.AuthRepository.CheckEmail(ctx, tx, email)
+		result := service.AuthRepository.CheckEmail(tx, email)
 		return result
 	}
 }
 
 // CheckUsername implements AuthService
-func (service *AuthServiceImpl) CheckUsername(ctx *gin.Context, username string) bool {
+func (service *AuthServiceImpl) CheckUsername(username string) bool {
 	tx := service.DB.Begin()
 	defer helper.CommitOrRollback(tx)
 	if tx.Error != nil {
 		return true
 	} else {
-		result := service.AuthRepository.CheckUsername(ctx, tx, username)
+		result := service.AuthRepository.CheckUsername(tx, username)
 		return result
 	}
 }

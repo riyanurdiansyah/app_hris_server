@@ -27,7 +27,7 @@ func NewAuthController(authService service.AuthService, jwtService service.JWTSe
 func (controller *AuthControllerImpl) SigninWithUsername(c *gin.Context) {
 	userLoginRequest := dto.UserLoginUsernameDTO{}
 	helper.ReadFromRequestBody(c.Request, &userLoginRequest)
-	userResponse := controller.AuthService.FindUserByUsername(c, &userLoginRequest)
+	userResponse := controller.AuthService.FindUserByUsername(&userLoginRequest)
 	if userResponse.Username == "" {
 		responses := helper.DefaultResponse{
 			Code:    http.StatusBadRequest,
@@ -65,8 +65,8 @@ func (controller *AuthControllerImpl) SignUp(c *gin.Context) {
 	userCreateRequest := dto.UserCreateDTO{}
 	helper.ReadFromRequestBody(c.Request, &userCreateRequest)
 
-	checkEmail := controller.CheckEmail(c, userCreateRequest.Email)
-	checkUsername := controller.CheckUsername(c, userCreateRequest.Username)
+	checkEmail := controller.CheckEmail(userCreateRequest.Email)
+	checkUsername := controller.CheckUsername(userCreateRequest.Username)
 	if checkEmail {
 		responses := helper.DefaultResponse{
 			Code:    http.StatusBadRequest,
@@ -87,7 +87,7 @@ func (controller *AuthControllerImpl) SignUp(c *gin.Context) {
 
 		userCreateRequest.Password = newPassword
 
-		userCreateResponse := controller.AuthService.SignUp(c, &userCreateRequest)
+		userCreateResponse := controller.AuthService.SignUp(&userCreateRequest)
 		if userCreateResponse.Error {
 			responses := helper.DefaultResponse{
 				Code:    http.StatusBadRequest,
@@ -112,7 +112,7 @@ func (controller *AuthControllerImpl) SignUp(c *gin.Context) {
 func (controller *AuthControllerImpl) FindUserByEmail(c *gin.Context) {
 	userLoginRequest := dto.UserLoginEmailDTO{}
 	helper.ReadFromRequestBody(c.Request, &userLoginRequest)
-	user := controller.AuthService.FindUserByEmail(c, &userLoginRequest)
+	user := controller.AuthService.FindUserByEmail(&userLoginRequest)
 	responses := helper.DefaultLoginResponse{
 		Code:    http.StatusOK,
 		Message: "Signin is successfull",
@@ -126,7 +126,7 @@ func (controller *AuthControllerImpl) FindUserByEmail(c *gin.Context) {
 func (controller *AuthControllerImpl) FindUserByUsername(c *gin.Context) {
 	userLoginRequest := dto.UserLoginUsernameDTO{}
 	helper.ReadFromRequestBody(c.Request, &userLoginRequest)
-	user := controller.AuthService.FindUserByUsername(c, &userLoginRequest)
+	user := controller.AuthService.FindUserByUsername(&userLoginRequest)
 	responses := helper.DefaultResponse{
 		Code:    http.StatusOK,
 		Message: "Signin is successfull",
@@ -149,13 +149,13 @@ func (*AuthControllerImpl) HashPassword(password string) (string, error) {
 }
 
 // CheckEmail implements AuthController
-func (controller *AuthControllerImpl) CheckEmail(ctx *gin.Context, email string) bool {
-	check := controller.AuthService.CheckEmail(ctx, email)
+func (controller *AuthControllerImpl) CheckEmail(email string) bool {
+	check := controller.AuthService.CheckEmail(email)
 	return check
 }
 
 // CheckUsername implements AuthController
-func (controller *AuthControllerImpl) CheckUsername(ctx *gin.Context, username string) bool {
-	check := controller.AuthService.CheckUsername(ctx, username)
+func (controller *AuthControllerImpl) CheckUsername(username string) bool {
+	check := controller.AuthService.CheckUsername(username)
 	return check
 }
