@@ -6,6 +6,7 @@ import (
 	"app-ecommerce-server/helper"
 	"app-ecommerce-server/repository"
 	"app-ecommerce-server/validation"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator"
@@ -47,8 +48,8 @@ func (service *CategoryServiceImpl) InsertCategory(ctx *gin.Context, request *dt
 	} else {
 		category := entity.Category{
 			Name:      request.Name,
-			CreatedAt: request.Created,
-			UpdatedAt: request.Updated,
+			CreatedAt: time.Now().Local().String(),
+			UpdatedAt: time.Now().Local().String(),
 		}
 
 		categoryResponse := service.CategoryRepository.InsertCategory(ctx, tx, &category)
@@ -113,8 +114,7 @@ func (service *CategoryServiceImpl) UpdateCategory(ctx *gin.Context, request *dt
 		category := entity.Category{
 			ID:        request.Id,
 			Name:      request.Name,
-			CreatedAt: request.Created,
-			UpdatedAt: request.Updated,
+			UpdatedAt: time.Now().Local().String(),
 		}
 
 		categoryResponse := service.CategoryRepository.UpdateCategory(ctx, tx, &category)

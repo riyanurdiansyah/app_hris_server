@@ -9,8 +9,8 @@ type CategoryDTO struct {
 
 type CategoryCreateDTO struct {
 	Name    string `validate:"required,min=1" json:"name"`
-	Created string `validate:"required" json:"created_at"`
-	Updated string `validate:"required" json:"updated_at"`
+	Created string `json:"created_at"`
+	Updated string `json:"updated_at"`
 }
 
 type CategoryUpdateDTO struct {

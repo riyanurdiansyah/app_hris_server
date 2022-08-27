@@ -30,9 +30,9 @@ func (controller *AuthControllerImpl) SigninWithUsername(c *gin.Context) {
 	userResponse := controller.AuthService.FindUserByUsername(c, &userLoginRequest)
 	if userResponse.Username == "" {
 		responses := helper.DefaultResponse{
-			Code:   http.StatusBadRequest,
-			Status: "Username is not register",
-			Data:   helper.ObjectKosongResponse{},
+			Code:    http.StatusBadRequest,
+			Message: "Username is not register",
+			Data:    helper.ObjectKosongResponse{},
 		}
 		c.JSON(http.StatusBadRequest, responses)
 	} else {
@@ -40,17 +40,17 @@ func (controller *AuthControllerImpl) SigninWithUsername(c *gin.Context) {
 		if checkPassword {
 			token := controller.JWTService.GenerateToken(strconv.FormatUint(uint64(userResponse.Id), 10), userResponse.Email)
 			responses := helper.DefaultLoginResponse{
-				Code:   http.StatusOK,
-				Status: "Login is successfull",
-				Data:   userResponse,
-				Token:  token,
+				Code:    http.StatusOK,
+				Message: "Login is successfull",
+				Data:    userResponse,
+				Token:   token,
 			}
 			c.JSON(http.StatusOK, responses)
 		} else {
 			responses := helper.DefaultResponse{
-				Code:   http.StatusBadRequest,
-				Status: "Password is wrong",
-				Data:   helper.ObjectKosongResponse{},
+				Code:    http.StatusBadRequest,
+				Message: "Password is wrong",
+				Data:    helper.ObjectKosongResponse{},
 			}
 			c.JSON(http.StatusBadRequest, responses)
 		}
@@ -66,16 +66,16 @@ func (controller *AuthControllerImpl) SignUp(c *gin.Context) {
 	checkUsername := controller.CheckUsername(c, userCreateRequest.Username)
 	if checkEmail {
 		responses := helper.DefaultResponse{
-			Code:   http.StatusBadRequest,
-			Status: "Email already registered",
-			Data:   helper.ObjectKosongResponse{},
+			Code:    http.StatusBadRequest,
+			Message: "Email already registered",
+			Data:    helper.ObjectKosongResponse{},
 		}
 		c.JSON(http.StatusBadRequest, responses)
 	} else if checkUsername {
 		responses := helper.DefaultResponse{
-			Code:   http.StatusBadRequest,
-			Status: "Username already registered",
-			Data:   helper.ObjectKosongResponse{},
+			Code:    http.StatusBadRequest,
+			Message: "Username already registered",
+			Data:    helper.ObjectKosongResponse{},
 		}
 		c.JSON(http.StatusBadRequest, responses)
 	} else {
@@ -87,18 +87,18 @@ func (controller *AuthControllerImpl) SignUp(c *gin.Context) {
 		userCreateResponse := controller.AuthService.SignUp(c, &userCreateRequest)
 		if userCreateResponse.Error {
 			responses := helper.DefaultResponse{
-				Code:   http.StatusBadRequest,
-				Status: userCreateResponse.Message,
-				Data:   helper.ObjectKosongResponse{},
+				Code:    http.StatusBadRequest,
+				Message: userCreateResponse.Message,
+				Data:    helper.ObjectKosongResponse{},
 			}
 			c.JSON(http.StatusBadRequest, responses)
 		} else {
 			token := controller.JWTService.GenerateToken(strconv.FormatUint(uint64(userCreateResponse.Id), 10), userCreateResponse.Email)
 			responses := helper.DefaultLoginResponse{
-				Code:   http.StatusOK,
-				Status: "New user has been added",
-				Data:   userCreateResponse,
-				Token:  token,
+				Code:    http.StatusOK,
+				Message: "New user has been added",
+				Data:    userCreateResponse,
+				Token:   token,
 			}
 			c.JSON(http.StatusOK, responses)
 		}
@@ -111,9 +111,9 @@ func (controller *AuthControllerImpl) FindUserByEmail(c *gin.Context) {
 	helper.ReadFromRequestBody(c.Request, &userLoginRequest)
 	user := controller.AuthService.FindUserByEmail(c, &userLoginRequest)
 	responses := helper.DefaultLoginResponse{
-		Code:   http.StatusOK,
-		Status: "Signin is successfull",
-		Data:   user,
+		Code:    http.StatusOK,
+		Message: "Signin is successfull",
+		Data:    user,
 	}
 	c.JSON(http.StatusOK, responses)
 }
@@ -124,9 +124,9 @@ func (controller *AuthControllerImpl) FindUserByUsername(c *gin.Context) {
 	helper.ReadFromRequestBody(c.Request, &userLoginRequest)
 	user := controller.AuthService.FindUserByUsername(c, &userLoginRequest)
 	responses := helper.DefaultResponse{
-		Code:   http.StatusOK,
-		Status: "Signin is successfull",
-		Data:   user,
+		Code:    http.StatusOK,
+		Message: "Signin is successfull",
+		Data:    user,
 	}
 	c.JSON(http.StatusOK, responses)
 }

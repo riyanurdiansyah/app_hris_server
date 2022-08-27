@@ -26,6 +26,12 @@ func main() {
 	r := gin.Default()
 	v1 := r.Group("/api/v1")
 	{
+		auth := v1.Group("/auth")
+		{
+			auth.POST("/signup", authController.SignUp)
+			auth.POST("/find", authController.FindUserByUsername)
+			auth.POST("/signin", authController.SigninWithUsername)
+		}
 		categories := v1.Group("/categories")
 		{
 			categories.POST("", categoryController.InsertCategory)
@@ -33,13 +39,6 @@ func main() {
 			categories.GET("/:id", categoryController.FindByIdCategory)
 			categories.PUT("", categoryController.UpdateCategory)
 			categories.DELETE("/:id", categoryController.DeleteCategory)
-		}
-
-		auth := v1.Group("/auth")
-		{
-			auth.POST("/signup", authController.SignUp)
-			auth.POST("/find", authController.FindUserByUsername)
-			auth.POST("/signin", authController.SigninWithUsername)
 		}
 	}
 	r.Run()

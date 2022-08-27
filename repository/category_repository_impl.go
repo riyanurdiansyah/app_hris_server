@@ -64,8 +64,9 @@ func (repository *CategoryRepositoryImpl) DeleteCategory(ctx *gin.Context, db *g
 
 func (repository *CategoryRepositoryImpl) UpdateCategory(ctx *gin.Context, db *gorm.DB, category *entity.Category) *entity.Category {
 	var count int64
+	var tempCategory = entity.Category{}
 	checkid :=
-		db.Table("categories").Select("*").Where("id = ?", category.ID).Count(&count)
+		db.Table("categories").Select("*").Where("id = ?", category.ID).Count(&count).Scan(&tempCategory)
 	if checkid.Error != nil {
 		///handle error
 		/// ID Set ke -2 untuk penanda error saat check id

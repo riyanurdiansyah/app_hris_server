@@ -14,8 +14,8 @@ func AuthorizeJWT(jwtService service.JWTService) gin.HandlerFunc {
 		authHeader := c.GetHeader("Authorization")
 		if authHeader == "" {
 			response := helper.DefaultErrorResponse{
-				Code:   401,
-				Status: "Unauthorized - Token is not found",
+				Code:    401,
+				Message: "Unauthorized - Token is not found",
 			}
 			c.AbortWithStatusJSON(http.StatusUnauthorized, response)
 			return
@@ -28,8 +28,8 @@ func AuthorizeJWT(jwtService service.JWTService) gin.HandlerFunc {
 		} else {
 			println(err)
 			response := helper.DefaultErrorResponse{
-				Code:   401,
-				Status: "Unauthorized - Token is not valid",
+				Code:    401,
+				Message: "Unauthorized - Token is not valid",
 			}
 			c.AbortWithStatusJSON(http.StatusUnauthorized, response)
 			return
