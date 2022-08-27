@@ -3,7 +3,6 @@ package repository
 import (
 	"app-ecommerce-server/data/entity"
 
-	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
@@ -15,7 +14,7 @@ func NewProductRepository() ProductRepository {
 }
 
 // InsertProductDraft implements ProductRepository
-func (*ProductRepositoryImpl) InsertProductDraft(c *gin.Context, db *gorm.DB, product *entity.Product) *entity.Product {
+func (*ProductRepositoryImpl) InsertProductDraft(db *gorm.DB, product *entity.Product) *entity.Product {
 	result := db.Table("products_draft").Select("*").Create(&product)
 	if result.Error != nil {
 		product.ID = -99

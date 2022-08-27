@@ -87,7 +87,7 @@ func (controller *CategoryControllerImpl) InsertCategory(c *gin.Context) {
 					c.JSON(http.StatusBadRequest, responses)
 				} else {
 					categoryCreateRequest.Path = path
-					categoryResponse := controller.CategoryService.InsertCategory(c, &categoryCreateRequest)
+					categoryResponse := controller.CategoryService.InsertCategory(&categoryCreateRequest)
 					if categoryResponse.Error {
 						responses := helper.DefaultResponse{
 							Code:    http.StatusBadRequest,
@@ -134,7 +134,7 @@ func (controller *CategoryControllerImpl) FindByIdCategory(c *gin.Context) {
 		}
 		c.JSON(http.StatusBadRequest, responses)
 	} else {
-		categoryResponse := controller.CategoryService.FindByIdCategory(c, id)
+		categoryResponse := controller.CategoryService.FindByIdCategory(id)
 		if categoryResponse.Error {
 			responses := helper.DefaultResponse{
 				Code:    http.StatusBadRequest,
@@ -175,7 +175,7 @@ func (controller *CategoryControllerImpl) DeleteCategory(c *gin.Context) {
 		}
 		c.JSON(http.StatusBadRequest, responses)
 	} else {
-		categoryResponse := controller.CategoryService.DeleteCategory(c, id)
+		categoryResponse := controller.CategoryService.DeleteCategory(id)
 		if categoryResponse > 0 {
 			responses := helper.DefaultResponse{
 				Code:    http.StatusOK,
@@ -208,7 +208,7 @@ func (controller *CategoryControllerImpl) UpdateCategory(c *gin.Context) {
 	categoryUpdateRequest := dto.CategoryUpdateDTO{}
 	helper.ReadFromRequestBody(c.Request, &categoryUpdateRequest)
 
-	categoryResponse := controller.CategoryService.UpdateCategory(c, &categoryUpdateRequest)
+	categoryResponse := controller.CategoryService.UpdateCategory(&categoryUpdateRequest)
 	if categoryResponse.Error {
 		responses := helper.DefaultResponse{
 			Code:    http.StatusBadRequest,

@@ -28,7 +28,7 @@ func NewCategoryService(categoryRepository repository.CategoryRepository, DB *go
 	}
 }
 
-func (service *CategoryServiceImpl) InsertCategory(ctx *gin.Context, request *dto.CategoryCreateDTO) *dto.CategoryResponseDTO {
+func (service *CategoryServiceImpl) InsertCategory(request *dto.CategoryCreateDTO) *dto.CategoryResponseDTO {
 	errorValidation := service.Validate.Struct(request)
 	if errorValidation != nil {
 		msgError := validation.TextValidation(errorValidation.Error())
@@ -53,7 +53,7 @@ func (service *CategoryServiceImpl) InsertCategory(ctx *gin.Context, request *dt
 			UpdatedAt: time.Now().Local().String(),
 		}
 
-		categoryResponse := service.CategoryRepository.InsertCategory(ctx, tx, &category)
+		categoryResponse := service.CategoryRepository.InsertCategory(tx, &category)
 
 		return dto.ToCategoryResponseDTO(categoryResponse)
 	}
@@ -65,12 +65,12 @@ func (service *CategoryServiceImpl) FindAllCategory(ctx *gin.Context) []*dto.Cat
 	if tx.Error != nil {
 		return []*dto.CategoryResponseDTO{}
 	} else {
-		listCategory := service.CategoryRepository.FindAllCategory(ctx, tx)
+		listCategory := service.CategoryRepository.FindAllCategory(tx)
 		return dto.ToListCategoryResponseDTO(listCategory)
 	}
 }
 
-func (service *CategoryServiceImpl) FindByIdCategory(ctx *gin.Context, categoryId int) *dto.CategoryResponseDTO {
+func (service *CategoryServiceImpl) FindByIdCategory(categoryId int) *dto.CategoryResponseDTO {
 	tx := service.DB.Begin()
 	defer helper.CommitOrRollback(tx)
 	if tx.Error != nil {
@@ -79,23 +79,23 @@ func (service *CategoryServiceImpl) FindByIdCategory(ctx *gin.Context, categoryI
 			Message: "terjadi kesalahan.. silahkan coba lagi",
 		}
 	} else {
-		category := service.CategoryRepository.FindByIdCategory(ctx, tx, categoryId)
+		category := service.CategoryRepository.FindByIdCategory(tx, categoryId)
 		return dto.ToCategoryResponseDTO(category)
 	}
 }
 
-func (service *CategoryServiceImpl) DeleteCategory(ctx *gin.Context, categoryId int) int {
+func (service *CategoryServiceImpl) DeleteCategory(categoryId int) int {
 	tx := service.DB.Begin()
 	defer helper.CommitOrRollback(tx)
 	if tx.Error != nil {
 		return -1
 	} else {
-		count := service.CategoryRepository.DeleteCategory(ctx, tx, categoryId)
+		count := service.CategoryRepository.DeleteCategory(tx, categoryId)
 		return count
 	}
 }
 
-func (service *CategoryServiceImpl) UpdateCategory(ctx *gin.Context, request *dto.CategoryUpdateDTO) *dto.CategoryResponseDTO {
+func (service *CategoryServiceImpl) UpdateCategory(request *dto.CategoryUpdateDTO) *dto.CategoryResponseDTO {
 	errorValidation := service.Validate.Struct(request)
 	if errorValidation != nil {
 		msgError := validation.TextValidation(errorValidation.Error())
@@ -113,7 +113,7 @@ func (service *CategoryServiceImpl) UpdateCategory(ctx *gin.Context, request *dt
 		}
 	} else {
 
-		category := service.CategoryRepository.FindByIdCategory(ctx, tx, request.Id)
+		category := service.CategoryRepository.FindByIdCategory(tx, request.Id)
 		if category.Name == "" {
 			return &dto.CategoryResponseDTO{
 				Error:   true,
@@ -127,7 +127,7 @@ func (service *CategoryServiceImpl) UpdateCategory(ctx *gin.Context, request *dt
 				UpdatedAt: time.Now().Local().String(),
 			}
 
-			categoryResponse := service.CategoryRepository.UpdateCategory(ctx, tx, &categorys)
+			categoryResponse := service.CategoryRepository.UpdateCategory(tx, &categorys)
 
 			return dto.ToCategoryResponseDTO(categoryResponse)
 		}
