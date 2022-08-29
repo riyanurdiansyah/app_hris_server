@@ -39,26 +39,14 @@ func (repository *CategoryRepositoryImpl) FindByIdCategory(db *gorm.DB, category
 	return &category
 }
 
-func (repository *CategoryRepositoryImpl) DeleteCategory(db *gorm.DB, categoryId int) int {
-	var category = entity.Category{}
-	var count int64
-	checkid :=
-		db.Table("categories").Select("*").Where("id = ?", categoryId).Count(&count)
-	if checkid.Error != nil {
-		///handle panic
-		return -1
+func (repository *CategoryRepositoryImpl) DeleteCategory(db *gorm.DB, category *entity.Category) *entity.Category {
+	result :=
+		db.Table("categories").Where("id = ?", category.ID).Delete(&category)
+	if result.Error != nil {
+		category.ID = -99
+		return category
 	}
-	if count > 0 {
-		result :=
-			db.Table("categories").Where("id = ?", categoryId).Delete(&category)
-		if result.Error != nil {
-			///handle panic
-			return -1
-		}
-		return int(count)
-	}
-	return 0
-
+	return category
 }
 
 func (repository *CategoryRepositoryImpl) UpdateCategory(db *gorm.DB, category *entity.Category) *entity.Category {

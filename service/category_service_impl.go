@@ -74,9 +74,10 @@ func (service *CategoryServiceImpl) FindByIdCategory(categoryId int) *dto.Catego
 	tx := service.DB.Begin()
 	defer helper.CommitOrRollback(tx)
 	if tx.Error != nil {
+		msgError := validation.TextValidation(tx.Error.Error())
 		return &dto.CategoryResponseDTO{
 			Error:   true,
-			Message: "terjadi kesalahan.. silahkan coba lagi",
+			Message: msgError,
 		}
 	} else {
 		category := service.CategoryRepository.FindByIdCategory(tx, categoryId)
@@ -84,14 +85,33 @@ func (service *CategoryServiceImpl) FindByIdCategory(categoryId int) *dto.Catego
 	}
 }
 
-func (service *CategoryServiceImpl) DeleteCategory(categoryId int) int {
+func (service *CategoryServiceImpl) DeleteCategory(request *dto.CategoryResponseDTO) *dto.CategoryResponseDTO {
+	errorValidation := service.Validate.Struct(request)
+	if errorValidation != nil {
+		msgError := validation.TextValidation(errorValidation.Error())
+		return &dto.CategoryResponseDTO{
+			Error:   true,
+			Message: msgError,
+		}
+	}
 	tx := service.DB.Begin()
 	defer helper.CommitOrRollback(tx)
 	if tx.Error != nil {
-		return -1
+		return &dto.CategoryResponseDTO{
+			Error:   true,
+			Message: "terjadi kesalahan... silahkan coba beberapa saat lagi",
+		}
 	} else {
-		count := service.CategoryRepository.DeleteCategory(tx, categoryId)
-		return count
+		promo := entity.Category{
+			ID:        request.Id,
+			Name:      request.Name,
+			Image:     request.Image,
+			CreatedAt: request.Created,
+			UpdatedAt: time.Now().Local().String(),
+		}
+		promoResponse := service.CategoryRepository.DeleteCategory(tx, &promo)
+
+		return dto.ToCategoryResponseDTO(promoResponse)
 	}
 }
 

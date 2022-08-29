@@ -10,8 +10,8 @@ type CategoryDTO struct {
 }
 
 type CategoryCreateDTO struct {
-	Name  string                `form:"name" binding:"required"`
-	Image *multipart.FileHeader `form:"image" binding:"required"`
+	Name  string                `form:"name" validate:"required"`
+	Image *multipart.FileHeader `form:"image" validate:"required"`
 	Path  string
 }
 

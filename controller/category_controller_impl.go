@@ -31,7 +31,7 @@ func (controller *CategoryControllerImpl) InsertCategory(c *gin.Context) {
 	if err != nil {
 		responses := helper.DefaultResponse{
 			Code:    http.StatusBadRequest,
-			Message: err.Error(),
+			Message: "please check your image file",
 			Data:    helper.ObjectKosongResponse{},
 			Status:  false,
 		}
@@ -169,37 +169,50 @@ func (controller *CategoryControllerImpl) DeleteCategory(c *gin.Context) {
 	if err != nil {
 		responses := helper.DefaultResponse{
 			Code:    http.StatusBadRequest,
-			Message: "terjadi kesalahan... silahkan coba lagi",
-			Data:    helper.ObjectKosongResponse{},
+			Message: "Parameter id is not found",
 			Status:  false,
+			Data:    helper.ObjectKosongResponse{},
 		}
 		c.JSON(http.StatusBadRequest, responses)
 	} else {
-		categoryResponse := controller.CategoryService.DeleteCategory(id)
-		if categoryResponse > 0 {
+		categoryResponse := controller.CategoryService.FindByIdCategory(id)
+		if categoryResponse.Error {
 			responses := helper.DefaultResponse{
-				Code:    http.StatusOK,
-				Message: "data category has been deleted",
-				Data:    helper.ObjectKosongResponse{},
-				Status:  true,
-			}
-			c.JSON(http.StatusOK, responses)
-		} else if categoryResponse == 0 {
-			responses := helper.DefaultResponse{
-				Code:    http.StatusNotFound,
-				Message: "category id is not found",
+				Code:    http.StatusBadRequest,
+				Message: categoryResponse.Message,
 				Data:    helper.ObjectKosongResponse{},
 				Status:  false,
 			}
-			c.JSON(http.StatusNotFound, responses)
+			c.JSON(http.StatusBadRequest, responses)
+		} else if categoryResponse.Name == "" {
+			responses := helper.DefaultResponse{
+				Code:    http.StatusBadRequest,
+				Message: "Category id is not found",
+				Status:  false,
+				Data:    helper.ObjectKosongResponse{},
+			}
+			c.JSON(http.StatusBadRequest, responses)
 		} else {
-			responses := helper.DefaultResponse{
-				Code:    http.StatusInternalServerError,
-				Message: "terjadi kesalahan... silahkan coba beberapa saat lagi",
-				Data:    helper.ObjectKosongResponse{},
-				Status:  false,
+			deleteResponse := controller.CategoryService.DeleteCategory(categoryResponse)
+
+			if deleteResponse.Error {
+				responses := helper.DefaultResponse{
+					Code:    http.StatusBadRequest,
+					Message: deleteResponse.Message,
+					Data:    helper.ObjectKosongResponse{},
+					Status:  false,
+				}
+				c.JSON(http.StatusBadRequest, responses)
+			} else {
+				os.Remove("." + deleteResponse.Image)
+				responses := helper.DefaultResponse{
+					Code:    http.StatusOK,
+					Message: "Category has been deleted",
+					Data:    helper.ObjectKosongResponse{},
+					Status:  true,
+				}
+				c.JSON(http.StatusOK, responses)
 			}
-			c.JSON(http.StatusInternalServerError, responses)
 		}
 	}
 }
