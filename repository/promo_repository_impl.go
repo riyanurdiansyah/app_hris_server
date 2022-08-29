@@ -33,3 +33,27 @@ func (*PromoRepositoryImpl) GetAllPromo(db *gorm.DB) []*entity.Promo {
 	helper.PanicIfError(result.Error)
 	return listPromo
 }
+
+// FindPromoById implements PromoRepository
+func (repo *PromoRepositoryImpl) FindPromoById(db *gorm.DB, promoId int) *entity.Promo {
+	var promo = entity.Promo{}
+	result := db.Table("promos_slider").Select("*").Where("id = ?", promoId).Scan(&promo)
+	if result.Error != nil {
+		promo.ID = -99
+		return &promo
+	}
+	println("CHECK ID ", promo.ID)
+	println("CHECK NAME ", promo.Name)
+	return &promo
+}
+
+// UpdatePromo implements PromoRepository
+func (repo *PromoRepositoryImpl) UpdatePromo(db *gorm.DB, promo *entity.Promo) *entity.Promo {
+	result :=
+		db.Table("promos_slider").Where("id = ?", promo.ID).Updates(&promo)
+	if result.Error != nil {
+		promo.ID = -99
+		return promo
+	}
+	return promo
+}

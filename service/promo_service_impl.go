@@ -74,3 +74,62 @@ func (service *PromoServiceImpl) InsertPromo(request *dto.PromoCreateDTO) *dto.P
 		return dto.ToPromoResponseDTO(promoResponse)
 	}
 }
+
+// FindPromoById implements PromoService
+func (service *PromoServiceImpl) FindPromoById(request *dto.PromoUpdateDTO) *dto.PromoResponseDTO {
+	errorValidation := service.Validate.Struct(request)
+	if errorValidation != nil {
+		msgError := validation.TextValidation(errorValidation.Error())
+		return &dto.PromoResponseDTO{
+			Error:   true,
+			Message: msgError,
+		}
+	}
+	tx := service.DB.Begin()
+	defer helper.CommitOrRollback(tx)
+	if tx.Error != nil {
+		msgError := validation.TextValidation(tx.Error.Error())
+		return &dto.PromoResponseDTO{
+			Error:   true,
+			Message: msgError,
+		}
+	} else {
+		promoResponse := service.PromoRepository.FindPromoById(tx, request.ID)
+		return dto.ToPromoResponseDTO(promoResponse)
+	}
+}
+
+// UpdatePromo implements PromoService
+func (service *PromoServiceImpl) UpdatePromo(request *dto.PromoResponseDTO) *dto.PromoResponseDTO {
+	errorValidation := service.Validate.Struct(request)
+	if errorValidation != nil {
+		msgError := validation.TextValidation(errorValidation.Error())
+		return &dto.PromoResponseDTO{
+			Error:   true,
+			Message: msgError,
+		}
+	}
+	tx := service.DB.Begin()
+	defer helper.CommitOrRollback(tx)
+	if tx.Error != nil {
+		return &dto.PromoResponseDTO{
+			Error:   true,
+			Message: "terjadi kesalahan... silahkan coba beberapa saat lagi",
+		}
+	} else {
+		promo := entity.Promo{
+			ID:          request.ID,
+			Name:        request.Name,
+			Image:       request.Image,
+			Description: request.Description,
+			KodePromo:   request.KodePromo,
+			Expired:     request.Expired,
+			Status:      request.Status,
+			CreatedAt:   request.Created,
+			UpdatedAt:   time.Now().Local().String(),
+		}
+		promoResponse := service.PromoRepository.UpdatePromo(tx, &promo)
+
+		return dto.ToPromoResponseDTO(promoResponse)
+	}
+}

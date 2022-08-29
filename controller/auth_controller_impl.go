@@ -108,34 +108,6 @@ func (controller *AuthControllerImpl) SignUp(c *gin.Context) {
 	}
 }
 
-// FindUserByEmail implements AuthController
-func (controller *AuthControllerImpl) FindUserByEmail(c *gin.Context) {
-	userLoginRequest := dto.UserLoginEmailDTO{}
-	helper.ReadFromRequestBody(c.Request, &userLoginRequest)
-	user := controller.AuthService.FindUserByEmail(&userLoginRequest)
-	responses := helper.DefaultLoginResponse{
-		Code:    http.StatusOK,
-		Message: "Signin is successfull",
-		Status:  true,
-		Data:    user,
-	}
-	c.JSON(http.StatusOK, responses)
-}
-
-// FindUserByUsername implements AuthController
-func (controller *AuthControllerImpl) FindUserByUsername(c *gin.Context) {
-	userLoginRequest := dto.UserLoginUsernameDTO{}
-	helper.ReadFromRequestBody(c.Request, &userLoginRequest)
-	user := controller.AuthService.FindUserByUsername(&userLoginRequest)
-	responses := helper.DefaultResponse{
-		Code:    http.StatusOK,
-		Message: "Signin is successfull",
-		Status:  true,
-		Data:    user,
-	}
-	c.JSON(http.StatusOK, responses)
-}
-
 // CheckPasswordHash implements AuthController
 func (*AuthControllerImpl) CheckPasswordHash(password string, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))

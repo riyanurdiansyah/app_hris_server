@@ -31,7 +31,7 @@ func (controller *CategoryControllerImpl) InsertCategory(c *gin.Context) {
 	if err != nil {
 		responses := helper.DefaultResponse{
 			Code:    http.StatusBadRequest,
-			Message: "please check your image file",
+			Message: err.Error(),
 			Data:    helper.ObjectKosongResponse{},
 			Status:  false,
 		}
@@ -41,7 +41,7 @@ func (controller *CategoryControllerImpl) InsertCategory(c *gin.Context) {
 		if errBind != nil {
 			responses := helper.DefaultResponse{
 				Code:    http.StatusBadRequest,
-				Message: "please check your file image",
+				Message: errBind.Error(),
 				Data:    helper.ObjectKosongResponse{},
 				Status:  false,
 			}

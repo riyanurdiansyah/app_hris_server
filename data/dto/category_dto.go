@@ -20,10 +20,6 @@ type CategoryUpdateDTO struct {
 	Name string `json:"name"`
 }
 
-type CategoryImageDTO struct {
-	Avatar *multipart.FileHeader `form:"avatar" binding:"required"`
-}
-
 type CategoryResponseDTO struct {
 	Id      int    `json:"id"`
 	Name    string `json:"name"`

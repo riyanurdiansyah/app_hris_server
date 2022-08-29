@@ -12,6 +12,7 @@ func ToPromoResponseDTO(promo *entity.Promo) *PromoResponseDTO {
 		Description: promo.Description,
 		KodePromo:   promo.KodePromo,
 		Expired:     promo.Expired,
+		Status:      promo.Status,
 		Created:     promo.CreatedAt,
 		Updated:     promo.UpdatedAt,
 	}
@@ -26,6 +27,7 @@ func ToListPromoResponseDTO(promo []*entity.Promo) []*PromoResponseDTO {
 			Image:       data.Image,
 			Description: data.Description,
 			KodePromo:   data.KodePromo,
+			Status:      data.Status,
 			Expired:     data.Expired,
 			Created:     data.CreatedAt,
 			Updated:     data.UpdatedAt,

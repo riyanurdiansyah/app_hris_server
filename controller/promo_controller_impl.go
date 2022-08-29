@@ -122,3 +122,48 @@ func (controller *PromoControllerImpl) InsertPromo(c *gin.Context) {
 		}
 	}
 }
+
+// UpdatePromo implements PromoController
+func (controller *PromoControllerImpl) UpdatePromo(c *gin.Context) {
+	promoUpdateRequest := dto.PromoUpdateDTO{}
+	helper.ReadFromRequestBody(c.Request, &promoUpdateRequest)
+	promoResponse := controller.PromoService.FindPromoById(&promoUpdateRequest)
+	if promoResponse.Error {
+		responses := helper.DefaultResponse{
+			Code:    http.StatusBadRequest,
+			Message: promoResponse.Message,
+			Data:    helper.ObjectKosongResponse{},
+			Status:  false,
+		}
+		c.JSON(http.StatusBadRequest, responses)
+	} else if promoResponse.Name == "" {
+		responses := helper.DefaultResponse{
+			Code:    http.StatusBadRequest,
+			Message: "Promo id is not found",
+			Status:  false,
+			Data:    helper.ObjectKosongResponse{},
+		}
+		c.JSON(http.StatusBadRequest, responses)
+	} else {
+		promoResponse.Status = promoUpdateRequest.Status
+		updateResponse := controller.PromoService.UpdatePromo(promoResponse)
+
+		if updateResponse.Error {
+			responses := helper.DefaultResponse{
+				Code:    http.StatusBadRequest,
+				Message: promoResponse.Message,
+				Data:    helper.ObjectKosongResponse{},
+				Status:  false,
+			}
+			c.JSON(http.StatusBadRequest, responses)
+		} else {
+			responses := helper.DefaultResponse{
+				Code:    http.StatusOK,
+				Message: "Promo has been updated",
+				Data:    promoResponse,
+				Status:  true,
+			}
+			c.JSON(http.StatusOK, responses)
+		}
+	}
+}

@@ -3,21 +3,25 @@ package main
 import (
 	"app-ecommerce-server/config"
 	"app-ecommerce-server/controller"
+	"app-ecommerce-server/helper"
 	"app-ecommerce-server/middleware"
 	"app-ecommerce-server/repository"
 	"app-ecommerce-server/service"
-	"mime/multipart"
+	"log"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator"
 )
 
-type CategoryObj struct {
-	Name   string                `form:"name"`
-	Avatar *multipart.FileHeader `form:"avatar" binding:"required"`
-}
+const defaultPort = "8080"
 
 func main() {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = defaultPort
+	}
+
 	validate := validator.New()
 	db := config.SetupGetConnection()
 	jwtService := service.NewJWTService()
@@ -35,12 +39,15 @@ func main() {
 	promoController := controller.NewPromoController(promoService)
 
 	r := gin.Default()
+	r.Static("assets", "./assets")
+	r.GET("/", func(c *gin.Context) {
+		c.File("index.html")
+	})
 	v1 := r.Group("/api/v1")
 	{
 		auth := v1.Group("/auth")
 		{
 			auth.POST("/signup", authController.SignUp)
-			auth.POST("/find", authController.FindUserByUsername)
 			auth.POST("/signin", authController.SigninWithUsername)
 		}
 		categories := v1.Group("/categories", middleware.AuthorizeJWT(jwtService))
@@ -55,8 +62,13 @@ func main() {
 		{
 			promos.POST("", promoController.InsertPromo)
 			promos.GET("", promoController.GetAllPromo)
+			promos.PUT("", promoController.UpdatePromo)
+			promos.DELETE("", func(ctx *gin.Context) {
+				err := os.Remove("./assets/images/promos/promo_gajian.png")
+				helper.PanicIfError(err)
+			})
 		}
 	}
-	r.Static("assets", "./assets")
-	r.Run()
+	log.Printf("connect to http://localhost:%s/", port)
+	r.Run(":" + port)
 }
