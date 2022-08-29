@@ -11,4 +11,5 @@ type PromoRepository interface {
 	GetAllPromo(db *gorm.DB) []*entity.Promo
 	FindPromoById(db *gorm.DB, promoId int) *entity.Promo
 	UpdatePromo(db *gorm.DB, promo *entity.Promo) *entity.Promo
+	DeletePromo(db *gorm.DB, promo *entity.Promo) *entity.Promo
 }

@@ -3,7 +3,6 @@ package main
 import (
 	"app-ecommerce-server/config"
 	"app-ecommerce-server/controller"
-	"app-ecommerce-server/helper"
 	"app-ecommerce-server/middleware"
 	"app-ecommerce-server/repository"
 	"app-ecommerce-server/service"
@@ -63,10 +62,7 @@ func main() {
 			promos.POST("", promoController.InsertPromo)
 			promos.GET("", promoController.GetAllPromo)
 			promos.PUT("", promoController.UpdatePromo)
-			promos.DELETE("", func(ctx *gin.Context) {
-				err := os.Remove("./assets/images/promos/promo_gajian.png")
-				helper.PanicIfError(err)
-			})
+			promos.DELETE("/:id", promoController.DeletePromo)
 		}
 	}
 	log.Printf("connect to http://localhost:%s/", port)

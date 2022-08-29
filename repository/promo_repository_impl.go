@@ -42,8 +42,6 @@ func (repo *PromoRepositoryImpl) FindPromoById(db *gorm.DB, promoId int) *entity
 		promo.ID = -99
 		return &promo
 	}
-	println("CHECK ID ", promo.ID)
-	println("CHECK NAME ", promo.Name)
 	return &promo
 }
 
@@ -51,6 +49,16 @@ func (repo *PromoRepositoryImpl) FindPromoById(db *gorm.DB, promoId int) *entity
 func (repo *PromoRepositoryImpl) UpdatePromo(db *gorm.DB, promo *entity.Promo) *entity.Promo {
 	result :=
 		db.Table("promos_slider").Where("id = ?", promo.ID).Updates(&promo)
+	if result.Error != nil {
+		promo.ID = -99
+		return promo
+	}
+	return promo
+}
+
+func (repo *PromoRepositoryImpl) DeletePromo(db *gorm.DB, promo *entity.Promo) *entity.Promo {
+	result :=
+		db.Table("promos_slider").Where("id = ?", promo.ID).Delete(&promo)
 	if result.Error != nil {
 		promo.ID = -99
 		return promo

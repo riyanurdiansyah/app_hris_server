@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -127,7 +128,7 @@ func (controller *PromoControllerImpl) InsertPromo(c *gin.Context) {
 func (controller *PromoControllerImpl) UpdatePromo(c *gin.Context) {
 	promoUpdateRequest := dto.PromoUpdateDTO{}
 	helper.ReadFromRequestBody(c.Request, &promoUpdateRequest)
-	promoResponse := controller.PromoService.FindPromoById(&promoUpdateRequest)
+	promoResponse := controller.PromoService.FindPromoById(promoUpdateRequest.ID)
 	if promoResponse.Error {
 		responses := helper.DefaultResponse{
 			Code:    http.StatusBadRequest,
@@ -164,6 +165,61 @@ func (controller *PromoControllerImpl) UpdatePromo(c *gin.Context) {
 				Status:  true,
 			}
 			c.JSON(http.StatusOK, responses)
+		}
+	}
+}
+
+// DeletePromo implements PromoController
+func (controller *PromoControllerImpl) DeletePromo(c *gin.Context) {
+	categoryId := c.Param("id")
+	id, err := strconv.Atoi(categoryId)
+	if err != nil {
+		responses := helper.DefaultResponse{
+			Code:    http.StatusBadRequest,
+			Message: "Parameter id is not found",
+			Status:  false,
+			Data:    helper.ObjectKosongResponse{},
+		}
+		c.JSON(http.StatusBadRequest, responses)
+	} else {
+		promoResponse := controller.PromoService.FindPromoById(id)
+		if promoResponse.Error {
+			responses := helper.DefaultResponse{
+				Code:    http.StatusBadRequest,
+				Message: promoResponse.Message,
+				Data:    helper.ObjectKosongResponse{},
+				Status:  false,
+			}
+			c.JSON(http.StatusBadRequest, responses)
+		} else if promoResponse.Name == "" {
+			responses := helper.DefaultResponse{
+				Code:    http.StatusBadRequest,
+				Message: "Promo id is not found",
+				Status:  false,
+				Data:    helper.ObjectKosongResponse{},
+			}
+			c.JSON(http.StatusBadRequest, responses)
+		} else {
+			deleteResponse := controller.PromoService.DeletePromo(promoResponse)
+
+			if deleteResponse.Error {
+				responses := helper.DefaultResponse{
+					Code:    http.StatusBadRequest,
+					Message: promoResponse.Message,
+					Data:    helper.ObjectKosongResponse{},
+					Status:  false,
+				}
+				c.JSON(http.StatusBadRequest, responses)
+			} else {
+				os.Remove("." + promoResponse.Image)
+				responses := helper.DefaultResponse{
+					Code:    http.StatusOK,
+					Message: "Promo has been deleted",
+					Data:    helper.ObjectKosongResponse{},
+					Status:  true,
+				}
+				c.JSON(http.StatusOK, responses)
+			}
 		}
 	}
 }
