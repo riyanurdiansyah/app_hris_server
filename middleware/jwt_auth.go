@@ -15,7 +15,7 @@ func AuthorizeJWT(jwtService service.JWTService) gin.HandlerFunc {
 		authHeader := c.GetHeader("Authorization")
 		if authHeader == "" {
 			response := helper.DefaultErrorResponse{
-				Code:    401,
+				Code:    http.StatusUnauthorized,
 				Message: "Unauthorized - Token is not found",
 			}
 			c.AbortWithStatusJSON(http.StatusUnauthorized, response)
@@ -25,13 +25,12 @@ func AuthorizeJWT(jwtService service.JWTService) gin.HandlerFunc {
 		token, err := jwtService.ValidateToken(splitToken[1])
 		if token.Valid {
 			claims := token.Claims.(jwt.MapClaims)
-			println("USER ID ", claims["user_id"])
-			println("ISSUER ", claims["issuer"])
+			println("CHECK ", claims["user_id"])
 		} else {
 			println(err)
 			response := helper.DefaultErrorResponse{
-				Code:    401,
-				Message: "Unauthorized - Token is not valid",
+				Code:    http.StatusUnauthorized,
+				Message: "Unauthorized - " + err.Error(),
 			}
 			c.AbortWithStatusJSON(http.StatusUnauthorized, response)
 			return
