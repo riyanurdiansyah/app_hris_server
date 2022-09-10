@@ -3,10 +3,12 @@ package main
 import (
 	"app-ecommerce-server/config"
 	"app-ecommerce-server/controller"
+	"app-ecommerce-server/helper"
 	"app-ecommerce-server/middleware"
 	"app-ecommerce-server/repository"
 	"app-ecommerce-server/service"
 	"log"
+	"net/http"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -40,7 +42,15 @@ func main() {
 	r := gin.Default()
 	r.Static("assets", "./assets")
 	r.GET("/", func(c *gin.Context) {
-		c.File("index.html")
+		c.Request.Header.Add("Access-Control-Allow-Origin", "*")
+		c.Request.Header.Add("Access-Control-Allow-Headers", "*")
+		// c.File("index.html")
+		c.JSON(200, helper.DefaultResponse{
+			Code:    http.StatusBadRequest,
+			Message: "WKWKWKW",
+			Data:    helper.ObjectKosongResponse{},
+			Status:  false,
+		})
 	})
 	v1 := r.Group("/api/v1")
 	{
@@ -49,7 +59,7 @@ func main() {
 			auth.POST("/signup", authController.SignUp)
 			auth.POST("/signin", authController.SigninWithUsername)
 		}
-		categories := v1.Group("/categories", middleware.AuthorizeJWT(jwtService))
+		categories := v1.Group("/categories")
 		{
 			categories.POST("", categoryController.InsertCategory)
 			categories.GET("", categoryController.FindAllCategory)

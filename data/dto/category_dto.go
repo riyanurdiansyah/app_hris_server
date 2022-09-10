@@ -24,6 +24,7 @@ type CategoryResponseDTO struct {
 	Id      int    `json:"id"`
 	Name    string `json:"name"`
 	Image   string `json:"image"`
+	Status  int    `json:"status"`
 	Created string `json:"created_at"`
 	Updated string `json:"updated_at"`
 	Error   bool   `json:"-"`

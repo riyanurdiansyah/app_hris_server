@@ -46,11 +46,13 @@ func (service *CategoryServiceImpl) InsertCategory(request *dto.CategoryCreateDT
 			Message: msgError,
 		}
 	} else {
+
 		category := entity.Category{
 			Name:      request.Name,
 			Image:     request.Path,
-			CreatedAt: time.Now().Local().String(),
-			UpdatedAt: time.Now().Local().String(),
+			Status:    1,
+			CreatedAt: time.Now().Format("2006-01-02 15:04:05"),
+			UpdatedAt: time.Now().Format("2006-01-02 15:04:05"),
 		}
 
 		categoryResponse := service.CategoryRepository.InsertCategory(tx, &category)
