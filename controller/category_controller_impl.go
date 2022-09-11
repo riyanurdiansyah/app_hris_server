@@ -6,6 +6,7 @@ import (
 	"app-ecommerce-server/service"
 	"errors"
 	"log"
+	"math"
 	"net/http"
 	"os"
 	"strconv"
@@ -112,12 +113,17 @@ func (controller *CategoryControllerImpl) InsertCategory(c *gin.Context) {
 }
 
 func (controller *CategoryControllerImpl) FindAllCategory(c *gin.Context) {
-	categoryResponse := controller.CategoryService.FindAllCategory(c)
-	responses := helper.DefaultResponse{
-		Code:    http.StatusOK,
-		Message: "Data category has been listed",
-		Data:    categoryResponse,
-		Status:  true,
+	page, _ := strconv.Atoi(c.Query("page"))
+	categoryResponse, total := controller.CategoryService.FindAllCategory(c)
+	var lastpage = int(math.Ceil(float64(total) / float64(4)))
+	responses := helper.DefaultPaginationResponse{
+		Code:     http.StatusOK,
+		Message:  "Data category has been listed",
+		Data:     categoryResponse,
+		Status:   true,
+		Page:     page,
+		Total:    total,
+		LastPage: lastpage,
 	}
 	c.JSON(http.StatusOK, responses)
 }

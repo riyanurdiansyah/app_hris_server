@@ -4,7 +4,6 @@ import (
 	"app-ecommerce-server/config"
 	"app-ecommerce-server/controller"
 	"app-ecommerce-server/helper"
-	"app-ecommerce-server/middleware"
 	"app-ecommerce-server/repository"
 	"app-ecommerce-server/service"
 	"log"
@@ -67,7 +66,8 @@ func main() {
 			categories.PUT("", categoryController.UpdateCategory)
 			categories.DELETE("/:id", categoryController.DeleteCategory)
 		}
-		promos := v1.Group("/promos", middleware.AuthorizeJWT(jwtService))
+		//, middleware.AuthorizeJWT(jwtService)
+		promos := v1.Group("/promos")
 		{
 			promos.POST("", promoController.InsertPromo)
 			promos.GET("", promoController.GetAllPromo)

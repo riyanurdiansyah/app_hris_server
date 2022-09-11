@@ -6,6 +6,7 @@ import (
 	"app-ecommerce-server/helper"
 	"app-ecommerce-server/repository"
 	"app-ecommerce-server/validation"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -61,14 +62,15 @@ func (service *CategoryServiceImpl) InsertCategory(request *dto.CategoryCreateDT
 	}
 }
 
-func (service *CategoryServiceImpl) FindAllCategory(ctx *gin.Context) []*dto.CategoryResponseDTO {
+func (service *CategoryServiceImpl) FindAllCategory(ctx *gin.Context) ([]*dto.CategoryResponseDTO, int64) {
+	page, _ := strconv.Atoi(ctx.Query("page"))
 	tx := service.DB.Begin()
 	defer helper.CommitOrRollback(tx)
 	if tx.Error != nil {
-		return []*dto.CategoryResponseDTO{}
+		return []*dto.CategoryResponseDTO{}, 0
 	} else {
-		listCategory := service.CategoryRepository.FindAllCategory(tx)
-		return dto.ToListCategoryResponseDTO(listCategory)
+		listCategory, total := service.CategoryRepository.FindAllCategory(tx, page)
+		return dto.ToListCategoryResponseDTO(listCategory), total
 	}
 }
 

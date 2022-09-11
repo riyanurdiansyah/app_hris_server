@@ -23,12 +23,21 @@ func (repository *CategoryRepositoryImpl) InsertCategory(db *gorm.DB, category *
 	return category
 }
 
-func (repository *CategoryRepositoryImpl) FindAllCategory(db *gorm.DB) []*entity.Category {
+func (repository *CategoryRepositoryImpl) FindAllCategory(db *gorm.DB, page int) ([]*entity.Category, int64) {
 	var listCategory = []*entity.Category{}
-	result :=
-		db.Table("categories").Select("*").Scan(&listCategory)
-	helper.PanicIfError(result.Error)
-	return listCategory
+	var total int64
+	if page == 0 {
+		result :=
+			db.Table("categories").Select("*").Scan(&listCategory).Count(&total)
+		helper.PanicIfError(result.Error)
+	} else {
+		perPage := 4
+		result :=
+			db.Table("categories").Select("*").Limit(4).Offset(((page - 1) * perPage)).Scan(&listCategory).Count(&total)
+		helper.PanicIfError(result.Error)
+	}
+	db.Table("categories").Select("*").Count(&total)
+	return listCategory, total
 }
 
 func (repository *CategoryRepositoryImpl) FindByIdCategory(db *gorm.DB, categoryId int) *entity.Category {

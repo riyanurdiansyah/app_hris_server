@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Sep 07, 2022 at 07:13 PM
+-- Generation Time: Sep 11, 2022 at 06:13 PM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 7.4.29
 
@@ -31,6 +31,7 @@ CREATE TABLE `categories` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `image` varchar(255) NOT NULL,
+  `status` int(1) NOT NULL,
   `created_at` varchar(64) NOT NULL,
   `updated_at` varchar(64) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -39,8 +40,16 @@ CREATE TABLE `categories` (
 -- Dumping data for table `categories`
 --
 
-INSERT INTO `categories` (`id`, `name`, `image`, `created_at`, `updated_at`) VALUES
-(1, 'Fashion Pria', '/assets/images/categories/fashion_pria.png', '2022-08-29 16:35:24.446988 +0700 WIB', '2022-08-29 16:35:24.446994 +0700 WIB');
+INSERT INTO `categories` (`id`, `name`, `image`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'Fashion Pria', '/assets/images/categories/fashion_pria.png', 1, '2022-09-11 01:25:39', '2022-09-11 01:25:39'),
+(2, 'Fashion Wanita', '/assets/images/categories/fashion_wanita.png', 1, '2022-09-11 01:25:52', '2022-09-11 01:25:52'),
+(3, 'Fashion Anak', '/assets/images/categories/fashion_anak.png', 1, '2022-09-11 01:31:53', '2022-09-11 01:31:53'),
+(4, 'Alat Olahraga', '/assets/images/categories/alat_olahraga.png', 1, '2022-09-11 01:37:46', '2022-09-11 01:37:46'),
+(5, 'Alat Kebersihan', '/assets/images/categories/alat_kebersihan.png', 1, '2022-09-11 02:39:43', '2022-09-11 02:39:43'),
+(6, 'Fashion Muslin', '/assets/images/categories/fashion_muslin.png', 1, '2022-09-11 16:12:43', '2022-09-11 16:12:43'),
+(7, 'Gaming', '/assets/images/categories/gaming.png', 1, '2022-09-11 16:13:24', '2022-09-11 16:13:24'),
+(8, 'Komputer & Laptop', '/assets/images/categories/komputer_&_laptop.png', 1, '2022-09-11 16:14:13', '2022-09-11 16:14:13'),
+(9, 'Tour & Travel', '/assets/images/categories/tour_&_travel.png', 1, '2022-09-11 16:15:07', '2022-09-11 16:15:07');
 
 -- --------------------------------------------------------
 
@@ -229,7 +238,7 @@ ALTER TABLE `users_token`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `products_draft`
