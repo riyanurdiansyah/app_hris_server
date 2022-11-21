@@ -1,7 +1,7 @@
 package service
 
 import (
-	"app-ecommerce-server/data/dto"
+	"app-travel-server/data/dto"
 )
 
 type AuthService interface {

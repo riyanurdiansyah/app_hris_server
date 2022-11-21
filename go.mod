@@ -1,4 +1,4 @@
-module app-ecommerce-server
+module app-travel-server
 
 go 1.19
 

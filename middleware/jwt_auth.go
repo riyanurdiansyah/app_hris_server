@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"app-ecommerce-server/helper"
-	"app-ecommerce-server/service"
+	"app-travel-server/helper"
+	"app-travel-server/service"
 	"net/http"
 	"strings"
 

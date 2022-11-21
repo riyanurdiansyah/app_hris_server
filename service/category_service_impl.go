@@ -1,11 +1,11 @@
 package service
 
 import (
-	"app-ecommerce-server/data/dto"
-	"app-ecommerce-server/data/entity"
-	"app-ecommerce-server/helper"
-	"app-ecommerce-server/repository"
-	"app-ecommerce-server/validation"
+	"app-travel-server/data/dto"
+	"app-travel-server/data/entity"
+	"app-travel-server/helper"
+	"app-travel-server/repository"
+	"app-travel-server/validation"
 	"strconv"
 	"time"
 

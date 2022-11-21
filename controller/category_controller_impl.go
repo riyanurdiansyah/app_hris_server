@@ -1,9 +1,9 @@
 package controller
 
 import (
-	"app-ecommerce-server/data/dto"
-	"app-ecommerce-server/helper"
-	"app-ecommerce-server/service"
+	"app-travel-server/data/dto"
+	"app-travel-server/helper"
+	"app-travel-server/service"
 	"errors"
 	"log"
 	"math"

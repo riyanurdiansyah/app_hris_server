@@ -1,10 +1,10 @@
 package main
 
 import (
-	"app-ecommerce-server/config"
-	"app-ecommerce-server/controller"
-	"app-ecommerce-server/repository"
-	"app-ecommerce-server/service"
+	"app-travel-server/config"
+	"app-travel-server/controller"
+	"app-travel-server/repository"
+	"app-travel-server/service"
 	"log"
 	"os"
 

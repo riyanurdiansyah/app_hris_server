@@ -1,7 +1,7 @@
 package service
 
 import (
-	"app-ecommerce-server/helper"
+	"app-travel-server/helper"
 	"fmt"
 	"os"
 	"time"

@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"app-ecommerce-server/data/entity"
+	"app-travel-server/data/entity"
 
 	"gorm.io/gorm"
 )

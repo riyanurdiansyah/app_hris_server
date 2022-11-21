@@ -1,7 +1,7 @@
 package dto
 
 import (
-	"app-ecommerce-server/data/entity"
+	"app-travel-server/data/entity"
 )
 
 func ToAuthResponseDTO(user *entity.User) *UserResponseDTO {
