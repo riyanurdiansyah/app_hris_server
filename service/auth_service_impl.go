@@ -52,7 +52,6 @@ func (service *AuthServiceImpl) SignUp(request *dto.UserCreateDTO) *dto.UserResp
 			Email:       request.Email,
 			Password:    request.Password,
 			PhoneNumber: request.PhoneNumber,
-			SignupWith:  request.SignupWith,
 			Role:        request.Role,
 			CreatedAt:   time.Now().Format(time.RFC3339),
 			UpdatedAt:   time.Now().Format(time.RFC3339),

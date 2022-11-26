@@ -3,6 +3,7 @@ package main
 import (
 	"app-hris-server/config"
 	"app-hris-server/controller"
+	"app-hris-server/middleware"
 	"app-hris-server/repository"
 	"app-hris-server/service"
 	"log"
@@ -23,6 +24,10 @@ func main() {
 	validate := validator.New()
 	db := config.SetupGetConnection()
 	jwtService := service.NewJWTService()
+
+	companyRepository := repository.NewCompanyRepository()
+	companyService := service.NewCompanyService(companyRepository, db, validate)
+	companyController := controller.NewCompanyController(companyService, jwtService)
 
 	categoryRepository := repository.NewCategoryRepository()
 	categoryService := service.NewCategoryService(categoryRepository, db, validate)
@@ -47,6 +52,10 @@ func main() {
 		{
 			auth.POST("/signup", authController.SignUp)
 			auth.POST("/signin", authController.SigninWithUsername)
+		}
+		company := v1.Group("/company", middleware.AuthorizeJWT(jwtService))
+		{
+			company.POST("", companyController.InsertCompany)
 		}
 		categories := v1.Group("/categories")
 		{
