@@ -1,5 +1,7 @@
 package dto
 
+import "app-hris-server/data/entity"
+
 type UserDTO struct {
 	ID          int    `json:"id"`
 	Username    string `json:"username"`
@@ -40,6 +42,7 @@ type UserResponseDTO struct {
 	PhoneNumber string `json:"phone_number"`
 	SignupWith  int    `json:"register_by"`
 	Role        int    `json:"role"`
+	Companies   []*entity.UserCompany
 	Created     string `json:"created_at"`
 	Updated     string `json:"updated_at"`
 	Error       bool   `json:"-"`

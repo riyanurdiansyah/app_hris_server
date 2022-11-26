@@ -1,4 +1,4 @@
-module app-travel-server
+module app-hris-server
 
 go 1.19
 

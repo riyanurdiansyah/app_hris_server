@@ -1,11 +1,11 @@
 package service
 
 import (
-	"app-travel-server/data/dto"
-	"app-travel-server/data/entity"
-	"app-travel-server/helper"
-	"app-travel-server/repository"
-	"app-travel-server/validation"
+	"app-hris-server/data/dto"
+	"app-hris-server/data/entity"
+	"app-hris-server/helper"
+	"app-hris-server/repository"
+	"app-hris-server/validation"
 	"time"
 
 	"github.com/go-playground/validator"
@@ -54,8 +54,8 @@ func (service *AuthServiceImpl) SignUp(request *dto.UserCreateDTO) *dto.UserResp
 			PhoneNumber: request.PhoneNumber,
 			SignupWith:  request.SignupWith,
 			Role:        request.Role,
-			CreatedAt:   time.Now().Local().String(),
-			UpdatedAt:   time.Now().Local().String(),
+			CreatedAt:   time.Now().Format(time.RFC3339),
+			UpdatedAt:   time.Now().Format(time.RFC3339),
 		}
 
 		userResponse := service.AuthRepository.SignUp(tx, &user)

@@ -1,10 +1,10 @@
 package main
 
 import (
-	"app-travel-server/config"
-	"app-travel-server/controller"
-	"app-travel-server/repository"
-	"app-travel-server/service"
+	"app-hris-server/config"
+	"app-hris-server/controller"
+	"app-hris-server/repository"
+	"app-hris-server/service"
 	"log"
 	"os"
 

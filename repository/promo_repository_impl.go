@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"app-travel-server/data/entity"
-	"app-travel-server/helper"
+	"app-hris-server/data/entity"
+	"app-hris-server/helper"
 
 	"gorm.io/gorm"
 )

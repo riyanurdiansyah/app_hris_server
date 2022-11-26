@@ -11,3 +11,10 @@ type User struct {
 	CreatedAt   string `gorm:"column:created_at"`
 	UpdatedAt   string `gorm:"column:updated_at"`
 }
+
+type UserCompany struct {
+	ID        int `gorm:"column:id;primaryKey;autoIncrement"`
+	IdUser    int `gorm:"column:id_user"`
+	IdCompany int `gorm:"column:id_company"`
+	Status    int `gorm:"column:status"`
+}

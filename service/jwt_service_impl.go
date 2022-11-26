@@ -1,7 +1,7 @@
 package service
 
 import (
-	"app-travel-server/helper"
+	"app-hris-server/helper"
 	"fmt"
 	"os"
 	"time"

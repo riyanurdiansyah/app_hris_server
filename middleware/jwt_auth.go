@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"app-travel-server/helper"
-	"app-travel-server/service"
+	"app-hris-server/helper"
+	"app-hris-server/service"
 	"net/http"
 	"strings"
 

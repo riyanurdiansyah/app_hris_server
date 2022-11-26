@@ -1,7 +1,7 @@
 package config
 
 import (
-	"app-travel-server/helper"
+	"app-hris-server/helper"
 	"os"
 	"time"
 

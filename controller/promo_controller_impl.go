@@ -1,9 +1,9 @@
 package controller
 
 import (
-	"app-travel-server/data/dto"
-	"app-travel-server/helper"
-	"app-travel-server/service"
+	"app-hris-server/data/dto"
+	"app-hris-server/helper"
+	"app-hris-server/service"
 	"errors"
 	"log"
 	"net/http"

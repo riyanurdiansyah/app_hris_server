@@ -1,7 +1,7 @@
 package dto
 
 import (
-	"app-travel-server/data/entity"
+	"app-hris-server/data/entity"
 )
 
 func ToCategoryResponseDTO(category *entity.Category) *CategoryResponseDTO {

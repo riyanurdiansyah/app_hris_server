@@ -1,9 +1,9 @@
 package controller
 
 import (
-	"app-travel-server/data/dto"
-	"app-travel-server/helper"
-	"app-travel-server/service"
+	"app-hris-server/data/dto"
+	"app-hris-server/helper"
+	"app-hris-server/service"
 	"net/http"
 	"strconv"
 
@@ -99,6 +99,7 @@ func (controller *AuthControllerImpl) SignUp(c *gin.Context) {
 			token := controller.JWTService.GenerateToken(strconv.FormatUint(uint64(userCreateResponse.Id), 10), userCreateResponse.Email)
 			responses := helper.DefaultLoginResponse{
 				Code:    http.StatusOK,
+				Status:  true,
 				Message: "New user has been added",
 				Data:    userCreateResponse,
 				Token:   token,

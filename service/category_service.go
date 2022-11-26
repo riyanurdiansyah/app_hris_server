@@ -1,7 +1,7 @@
 package service
 
 import (
-	"app-travel-server/data/dto"
+	"app-hris-server/data/dto"
 
 	"github.com/gin-gonic/gin"
 )

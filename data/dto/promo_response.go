@@ -1,7 +1,7 @@
 package dto
 
 import (
-	"app-travel-server/data/entity"
+	"app-hris-server/data/entity"
 )
 
 func ToPromoResponseDTO(promo *entity.Promo) *PromoResponseDTO {
