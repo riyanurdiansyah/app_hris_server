@@ -67,3 +67,14 @@ func (*AuthRepositoryImpl) CheckUsername(db *gorm.DB, username string) bool {
 		return true
 	}
 }
+
+// CheckCompany implements AuthRepository
+func (*AuthRepositoryImpl) CheckCompany(db *gorm.DB, key string) bool {
+	var company = entity.Company{}
+	db.Table("companies").Select("*").Where("secret_key = ?", key).Scan(&company)
+	if company.Name == "" {
+		return false
+	} else {
+		return true
+	}
+}

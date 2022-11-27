@@ -67,6 +67,7 @@ func (controller *AuthControllerImpl) SignUp(c *gin.Context) {
 
 	checkEmail := controller.CheckEmail(userCreateRequest.Email)
 	checkUsername := controller.CheckUsername(userCreateRequest.Username)
+	checkCompany := controller.CheckCompany(userCreateRequest.CompanySecretKey)
 	if checkEmail {
 		responses := helper.DefaultResponse{
 			Code:    http.StatusBadRequest,
@@ -78,6 +79,13 @@ func (controller *AuthControllerImpl) SignUp(c *gin.Context) {
 		responses := helper.DefaultResponse{
 			Code:    http.StatusBadRequest,
 			Message: "Username already registered",
+			Data:    helper.ObjectKosongResponse{},
+		}
+		c.JSON(http.StatusBadRequest, responses)
+	} else if !checkCompany {
+		responses := helper.DefaultResponse{
+			Code:    http.StatusBadRequest,
+			Message: "Company key is wrong!",
 			Data:    helper.ObjectKosongResponse{},
 		}
 		c.JSON(http.StatusBadRequest, responses)
@@ -130,5 +138,11 @@ func (controller *AuthControllerImpl) CheckEmail(email string) bool {
 // CheckUsername implements AuthController
 func (controller *AuthControllerImpl) CheckUsername(username string) bool {
 	check := controller.AuthService.CheckUsername(username)
+	return check
+}
+
+// CheckCompany implements AuthController
+func (controller *AuthControllerImpl) CheckCompany(key string) bool {
+	check := controller.AuthService.CheckCompany(key)
 	return check
 }

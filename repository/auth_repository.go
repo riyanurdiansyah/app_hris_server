@@ -12,4 +12,5 @@ type AuthRepository interface {
 	FindUserByUsername(db *gorm.DB, username string) *entity.User
 	CheckEmail(db *gorm.DB, email string) bool
 	CheckUsername(db *gorm.DB, username string) bool
+	CheckCompany(db *gorm.DB, key string) bool
 }

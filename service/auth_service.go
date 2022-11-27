@@ -10,4 +10,5 @@ type AuthService interface {
 	FindUserByUsername(request *dto.UserLoginUsernameDTO) *dto.UserResponseDTO
 	CheckEmail(email string) bool
 	CheckUsername(username string) bool
+	CheckCompany(key string) bool
 }

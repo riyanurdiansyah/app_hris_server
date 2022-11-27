@@ -4,16 +4,18 @@ import "strings"
 
 func TextValidation(txterror string) string {
 	if strings.Contains(strings.ToLower(txterror), "name") {
-		return "parameter name tidak boleh kosong"
+		return "name tidak boleh kosong"
 	} else if strings.Contains(strings.ToLower(txterror), "password") {
-		return "parameter password tidak boleh kosong"
+		return "password tidak boleh kosong"
 	} else if strings.Contains(strings.ToLower(txterror), "username") {
-		return "parameter username tidak boleh kosong"
+		return "username tidak boleh kosong"
 	} else if strings.Contains(strings.ToLower(txterror), "signup") {
-		return "parameter register_by tidak boleh kosong"
+		return "register_by tidak boleh kosong"
 	} else if strings.Contains(strings.ToLower(txterror), "role") {
-		return "parameter role tidak boleh kosong"
+		return "role tidak boleh kosong"
+	} else if strings.Contains(strings.ToLower(txterror), "employeeid") {
+		return "employee_id tidak boleh kosong"
 	} else {
-		return "gagal terhubung keserver"
+		return "validation error"
 	}
 }

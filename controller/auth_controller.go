@@ -9,6 +9,7 @@ type AuthController interface {
 	SigninWithUsername(c *gin.Context)
 	CheckEmail(email string) bool
 	CheckUsername(username string) bool
+	CheckCompany(key string) bool
 	HashPassword(password string) (string, error)
 	CheckPasswordHash(password, hash string) bool
 }

@@ -48,13 +48,15 @@ func (service *AuthServiceImpl) SignUp(request *dto.UserCreateDTO) *dto.UserResp
 		}
 	} else {
 		user := entity.User{
-			Username:    request.Username,
-			Email:       request.Email,
-			Password:    request.Password,
-			PhoneNumber: request.PhoneNumber,
-			Role:        request.Role,
-			CreatedAt:   time.Now().Format(time.RFC3339),
-			UpdatedAt:   time.Now().Format(time.RFC3339),
+			EmployeeId:       request.EmployeeId,
+			Username:         request.Username,
+			Email:            request.Email,
+			Password:         request.Password,
+			PhoneNumber:      request.PhoneNumber,
+			Role:             request.Role,
+			CompanySecretKey: request.CompanySecretKey,
+			CreatedAt:        time.Now().Format(time.RFC3339),
+			UpdatedAt:        time.Now().Format(time.RFC3339),
 		}
 
 		userResponse := service.AuthRepository.SignUp(tx, &user)
@@ -131,6 +133,18 @@ func (service *AuthServiceImpl) CheckUsername(username string) bool {
 		return true
 	} else {
 		result := service.AuthRepository.CheckUsername(tx, username)
+		return result
+	}
+}
+
+// CheckCompany implements AuthService
+func (service *AuthServiceImpl) CheckCompany(key string) bool {
+	tx := service.DB.Begin()
+	defer helper.CommitOrRollback(tx)
+	if tx.Error != nil {
+		return true
+	} else {
+		result := service.AuthRepository.CheckCompany(tx, key)
 		return result
 	}
 }

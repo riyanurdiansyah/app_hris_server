@@ -1,9 +1,8 @@
 package dto
 
-import "app-hris-server/data/entity"
-
 type UserDTO struct {
 	ID          int    `json:"id"`
+	EmployeeId  string `json:"employee_id"`
 	Username    string `json:"username"`
 	Email       string `json:"email"`
 	Password    string `json:"password"`
@@ -15,13 +14,15 @@ type UserDTO struct {
 }
 
 type UserCreateDTO struct {
-	Username    string `validate:"required,min=1" json:"username"`
-	Email       string `json:"email"`
-	Password    string `validate:"required,min=8" json:"password"`
-	PhoneNumber string `json:"phone_number"`
-	Role        int    `validate:"required" json:"role"`
-	Created     string `json:"created_at"`
-	Updated     string `json:"updated_at"`
+	Username         string `validate:"required" json:"username"`
+	EmployeeId       string `validate:"required" json:"employee_id"`
+	Email            string `validate:"required" json:"email"`
+	Password         string `validate:"required,min=8" json:"password"`
+	PhoneNumber      string `json:"phone_number"`
+	Role             int    `validate:"required" json:"role"`
+	CompanySecretKey string `validate:"required" json:"company_secret_key"`
+	Created          string `json:"created_at"`
+	Updated          string `json:"updated_at"`
 }
 
 type UserLoginUsernameDTO struct {
@@ -34,15 +35,16 @@ type UserLoginEmailDTO struct {
 	Password string `validate:"required,min=8" json:"password"`
 }
 type UserResponseDTO struct {
-	Id          int                   `json:"id"`
-	Username    string                `json:"username"`
-	Email       string                `json:"email"`
-	Password    string                `json:"-"`
-	PhoneNumber string                `json:"phone_number"`
-	Role        int                   `json:"role"`
-	Companies   []*entity.UserCompany `json:"companies"`
-	Created     string                `json:"created_at"`
-	Updated     string                `json:"updated_at"`
-	Error       bool                  `json:"-"`
-	Message     string                `json:"-"`
+	Id               int    `json:"id"`
+	EmployeeId       string `json:"employee_id"`
+	Username         string `json:"username"`
+	Email            string `json:"email"`
+	Password         string `json:"-"`
+	PhoneNumber      string `json:"phone_number"`
+	Role             int    `json:"role"`
+	CompanySecretKey string `json:"company_secret_key"`
+	Created          string `json:"created_at"`
+	Updated          string `json:"updated_at"`
+	Error            bool   `json:"-"`
+	Message          string `json:"-"`
 }

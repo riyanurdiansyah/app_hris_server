@@ -27,14 +27,16 @@ func String(length int) string {
 func ToAuthResponseDTO(user *entity.User) *UserResponseDTO {
 
 	return &UserResponseDTO{
-		Id:          user.ID,
-		Username:    user.Username,
-		Email:       StringWithCharset(64, charset),
-		PhoneNumber: user.PhoneNumber,
-		Password:    user.Password,
-		Role:        user.Role,
-		Created:     user.CreatedAt,
-		Updated:     user.UpdatedAt,
+		Id:               user.ID,
+		EmployeeId:       user.EmployeeId,
+		Username:         user.Username,
+		Email:            user.Email,
+		PhoneNumber:      user.PhoneNumber,
+		Password:         user.Password,
+		Role:             user.Role,
+		CompanySecretKey: user.CompanySecretKey,
+		Created:          user.CreatedAt,
+		Updated:          user.UpdatedAt,
 	}
 }
 
