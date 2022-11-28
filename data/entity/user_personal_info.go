@@ -2,7 +2,6 @@ package entity
 
 type UserPersonalInfo struct {
 	ID                int    `gorm:"column:id;primaryKey;autoIncrement"`
-	IdEmployee        string `gorm:"column:id_employee"`
 	IdUser            int    `gorm:"column:id_user"`
 	NamaDepan         string `gorm:"column:nama_depan"`
 	NamaBelakang      string `gorm:"column:nama_belakang"`

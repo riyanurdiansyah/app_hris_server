@@ -47,7 +47,6 @@ func (service *UserServiceImpl) AddUserInfoPersonal(request *dto.UserInfoCreateD
 		}
 	} else {
 		user := entity.UserPersonalInfo{
-			IdEmployee:        request.IdEmployee,
 			NamaDepan:         request.NamaDepan,
 			NamaBelakang:      request.NamaBelakang,
 			JenisKelamin:      request.JenisKelamin,
@@ -75,13 +74,13 @@ func (service *UserServiceImpl) AddUserInfoPersonal(request *dto.UserInfoCreateD
 }
 
 // CheckUser implements UserService
-func (service *UserServiceImpl) CheckUser(employeeId string) bool {
+func (service *UserServiceImpl) CheckUser(userId int) bool {
 	tx := service.DB.Begin()
 	defer helper.CommitOrRollback(tx)
 	if tx.Error != nil {
 		return true
 	} else {
-		result := service.UserRepository.CheckUser(tx, employeeId)
+		result := service.UserRepository.CheckUser(tx, userId)
 		return result
 	}
 }
@@ -106,7 +105,6 @@ func (service *UserServiceImpl) UpdateUserInfoPersonal(request *dto.UserInfoCrea
 		}
 	} else {
 		user := entity.UserPersonalInfo{
-			IdEmployee:        request.IdEmployee,
 			NamaDepan:         request.NamaDepan,
 			NamaBelakang:      request.NamaBelakang,
 			JenisKelamin:      request.JenisKelamin,

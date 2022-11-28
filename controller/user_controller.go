@@ -7,5 +7,5 @@ import (
 type UserController interface {
 	AddUserInfoPersonal(c *gin.Context)
 	UpdateUserInfoPersonal(c *gin.Context)
-	CheckUser(email string) bool
+	CheckUser(userId int) bool
 }

@@ -9,5 +9,5 @@ import (
 type UserRepository interface {
 	UpdateUserInfoPersonal(db *gorm.DB, ent *entity.UserPersonalInfo) *entity.UserPersonalInfo
 	AddUserInfoPersonal(db *gorm.DB, ent *entity.UserPersonalInfo) *entity.UserPersonalInfo
-	CheckUser(db *gorm.DB, employeeId string) bool
+	CheckUser(db *gorm.DB, userId int) bool
 }

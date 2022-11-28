@@ -25,7 +25,7 @@ func NewUserController(userService service.UserService, jwtService service.JWTSe
 func (controller *UserControllerImpl) AddUserInfoPersonal(c *gin.Context) {
 	userCreateRequest := dto.UserInfoCreateDTO{}
 	helper.ReadFromRequestBody(c.Request, &userCreateRequest)
-	checkUser := controller.CheckUser(userCreateRequest.IdEmployee)
+	checkUser := controller.CheckUser(userCreateRequest.IdUser)
 	if !checkUser {
 		userResponse := controller.UserService.AddUserInfoPersonal(&userCreateRequest)
 		if userResponse.Error {
@@ -71,7 +71,7 @@ func (controller *UserControllerImpl) UpdateUserInfoPersonal(c *gin.Context) {
 	userCreateRequest := dto.UserInfoCreateDTO{}
 	helper.ReadFromRequestBody(c.Request, &userCreateRequest)
 
-	checkUser := controller.CheckUser(userCreateRequest.IdEmployee)
+	checkUser := controller.CheckUser(userCreateRequest.IdUser)
 	if !checkUser {
 		responses := helper.DefaultResponse{
 			Code:    http.StatusBadRequest,
@@ -101,6 +101,6 @@ func (controller *UserControllerImpl) UpdateUserInfoPersonal(c *gin.Context) {
 }
 
 // CheckUser implements UserController
-func (controller *UserControllerImpl) CheckUser(employeeId string) bool {
-	return controller.UserService.CheckUser(employeeId)
+func (controller *UserControllerImpl) CheckUser(userId int) bool {
+	return controller.UserService.CheckUser(userId)
 }

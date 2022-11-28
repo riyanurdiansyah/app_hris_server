@@ -3,7 +3,6 @@ package dto
 import "app-hris-server/data/entity"
 
 type UserPersonalInfoResponseDTO struct {
-	IdEmployee        string `json:"id_employee"`
 	IdUser            int    `json:"id_user"`
 	NamaDepan         string `json:"nama_depan"`
 	NamaBelakang      string `json:"nama_belakang"`
@@ -27,7 +26,6 @@ type UserPersonalInfoResponseDTO struct {
 }
 
 type UserInfoCreateDTO struct {
-	IdEmployee        string `validate:"required" json:"id_employee"`
 	IdUser            int    `validate:"required" json:"id_user"`
 	NamaDepan         string `json:"nama_depan"`
 	NamaBelakang      string `json:"nama_belakang"`
@@ -49,7 +47,6 @@ type UserInfoCreateDTO struct {
 func ToUserPersonalInfoResponseDTO(ent *entity.UserPersonalInfo) *UserPersonalInfoResponseDTO {
 
 	return &UserPersonalInfoResponseDTO{
-		IdEmployee:        ent.IdEmployee,
 		NamaDepan:         ent.NamaDepan,
 		NamaBelakang:      ent.NamaBelakang,
 		JenisKelamin:      ent.JenisKelamin,
