@@ -23,6 +23,43 @@ func NewAuthController(authService service.AuthService, jwtService service.JWTSe
 	}
 }
 
+// SigninWithEmail implements AuthController
+func (controller *AuthControllerImpl) SigninWithEmail(c *gin.Context) {
+	userLoginRequest := dto.UserLoginEmailDTO{}
+	helper.ReadFromRequestBody(c.Request, &userLoginRequest)
+	userResponse := controller.AuthService.FindUserByEmail(&userLoginRequest)
+	if userResponse.Username == "" {
+		responses := helper.DefaultResponse{
+			Code:    http.StatusBadRequest,
+			Message: "Email is not register",
+			Status:  false,
+			Data:    helper.ObjectKosongResponse{},
+		}
+		c.JSON(http.StatusBadRequest, responses)
+	} else {
+		checkPassword := controller.CheckPasswordHash(userLoginRequest.Password, userResponse.Password)
+		if checkPassword {
+			token := controller.JWTService.GenerateToken(strconv.FormatUint(uint64(userResponse.Id), 10), userResponse.Email)
+			responses := helper.DefaultLoginResponse{
+				Code:    http.StatusOK,
+				Message: "Login is successfull",
+				Status:  true,
+				Data:    userResponse,
+				Token:   token,
+			}
+			c.JSON(http.StatusOK, responses)
+		} else {
+			responses := helper.DefaultResponse{
+				Code:    http.StatusBadRequest,
+				Message: "Password is wrong",
+				Status:  false,
+				Data:    helper.ObjectKosongResponse{},
+			}
+			c.JSON(http.StatusBadRequest, responses)
+		}
+	}
+}
+
 // SigninWithUsername implements AuthController
 func (controller *AuthControllerImpl) SigninWithUsername(c *gin.Context) {
 	userLoginRequest := dto.UserLoginUsernameDTO{}

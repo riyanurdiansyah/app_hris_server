@@ -47,7 +47,7 @@ func main() {
 		auth := v1.Group("/auth")
 		{
 			auth.POST("/signup", authController.SignUp)
-			auth.POST("/signin", authController.SigninWithUsername)
+			auth.POST("/signin", authController.SigninWithEmail)
 		}
 		company := v1.Group("/company")
 		{
