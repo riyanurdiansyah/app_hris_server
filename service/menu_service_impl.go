@@ -59,7 +59,7 @@ func (service *MenuServiceImpl) InsertMenu(request *dto.MenuCreateDTO) *dto.Menu
 	} else {
 		menu := entity.Menu{
 			Title:  request.Title,
-			Image:  request.Image,
+			Image:  request.Path,
 			Status: request.Status,
 			Route:  request.Route,
 		}
@@ -90,8 +90,9 @@ func (service *MenuServiceImpl) UpdateMenu(request *dto.MenuUpdateDTO) *dto.Menu
 		}
 	} else {
 		menu := entity.Menu{
+			ID:     request.Id,
 			Title:  request.Title,
-			Image:  request.Image,
+			Image:  request.Path,
 			Status: request.Status,
 			Route:  request.Route,
 		}
@@ -103,6 +104,25 @@ func (service *MenuServiceImpl) UpdateMenu(request *dto.MenuUpdateDTO) *dto.Menu
 }
 
 // GetMenu implements MenuService
-func (*MenuServiceImpl) GetMenu() []*dto.MenuResponseDTO {
-	panic("unimplemented")
+func (service *MenuServiceImpl) GetMenu() []*dto.MenuResponseDTO {
+	tx := service.DB.Begin()
+	defer helper.CommitOrRollback(tx)
+	if tx.Error != nil {
+		return []*dto.MenuResponseDTO{}
+	} else {
+		menus := service.MenuRepository.GetMenu(tx)
+		return dto.ToListMenuResponseDTO(menus)
+	}
+}
+
+// GetMenuById implements MenuService
+func (service *MenuServiceImpl) GetMenuById(id int) *dto.MenuResponseDTO {
+	tx := service.DB.Begin()
+	defer helper.CommitOrRollback(tx)
+	if tx.Error != nil {
+		return &dto.MenuResponseDTO{}
+	} else {
+		menu := service.MenuRepository.GetMenuById(tx, id)
+		return dto.ToMenuResponseDTO(menu)
+	}
 }

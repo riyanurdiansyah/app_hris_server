@@ -2,6 +2,7 @@ package repository
 
 import (
 	"app-hris-server/data/entity"
+	"app-hris-server/helper"
 
 	"gorm.io/gorm"
 )
@@ -35,10 +36,8 @@ func (*MenuRepositoryImpl) InsertMenu(db *gorm.DB, ent *entity.Menu) *entity.Men
 
 // UpdateMenu implements MenuRepository
 func (*MenuRepositoryImpl) UpdateMenu(db *gorm.DB, ent *entity.Menu) *entity.Menu {
-
-	var menu = entity.Menu{}
 	result :=
-		db.Table("menu").Where("id= ?", ent.ID).Updates(&menu)
+		db.Table("menu").Where("id= ?", ent.ID).Updates(&ent)
 	if result.Error != nil {
 		///handle panic
 		panic(result.Error)
@@ -48,6 +47,18 @@ func (*MenuRepositoryImpl) UpdateMenu(db *gorm.DB, ent *entity.Menu) *entity.Men
 
 // GetMenu implements MenuRepository
 func (*MenuRepositoryImpl) GetMenu(db *gorm.DB) []*entity.Menu {
-	var menu []*entity.Menu
-	return menu
+	var menus = []*entity.Menu{}
+	result :=
+		db.Table("menu").Select("*").Scan(&menus)
+	helper.PanicIfError(result.Error)
+	return menus
+}
+
+// GetMenuById implements MenuRepository
+func (*MenuRepositoryImpl) GetMenuById(db *gorm.DB, id int) *entity.Menu {
+	menu := entity.Menu{}
+	result :=
+		db.Table("menu").Where("id= ?", id).Scan(&menu)
+	helper.PanicIfError(result.Error)
+	return &menu
 }

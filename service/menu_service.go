@@ -7,6 +7,7 @@ import (
 type MenuService interface {
 	InsertMenu(request *dto.MenuCreateDTO) *dto.MenuResponseDTO
 	UpdateMenu(request *dto.MenuUpdateDTO) *dto.MenuResponseDTO
+	GetMenuById(id int) *dto.MenuResponseDTO
 	GetMenu() []*dto.MenuResponseDTO
 	CheckMenu(id int) bool
 }

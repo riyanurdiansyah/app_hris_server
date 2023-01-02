@@ -55,7 +55,7 @@ func (controller *CompanyControllerImpl) InsertCompany(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, responses)
 	} else {
 		responses := helper.DefaultResponse{
-			Code:    http.StatusOK,
+			Code:    http.StatusCreated,
 			Status:  true,
 			Message: "New company has been added",
 			Data:    createResponse,

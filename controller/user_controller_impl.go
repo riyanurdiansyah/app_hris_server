@@ -37,7 +37,7 @@ func (controller *UserControllerImpl) AddUserInfoPersonal(c *gin.Context) {
 			c.JSON(http.StatusBadRequest, responses)
 		} else {
 			responses := helper.DefaultResponse{
-				Code:    http.StatusOK,
+				Code:    http.StatusCreated,
 				Status:  true,
 				Message: "Data has been created",
 				Data:    userResponse,

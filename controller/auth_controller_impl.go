@@ -143,7 +143,7 @@ func (controller *AuthControllerImpl) SignUp(c *gin.Context) {
 		} else {
 			token := controller.JWTService.GenerateToken(strconv.FormatUint(uint64(userCreateResponse.Id), 10), userCreateResponse.Email)
 			responses := helper.DefaultLoginResponse{
-				Code:    http.StatusOK,
+				Code:    http.StatusCreated,
 				Status:  true,
 				Message: "New user has been added",
 				Data:    userCreateResponse,

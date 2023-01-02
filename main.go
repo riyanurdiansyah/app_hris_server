@@ -37,9 +37,9 @@ func main() {
 	userService := service.NewUserService(userRepository, db, validate)
 	userController := controller.NewUserController(userService, jwtService)
 
-	// menuRepository := repository.NewMenuRepository()
-	// menuService := service.NewMenuService(menuRepository, db, validate)
-	// menuController := controller.NewMenuController(menuService, jwtService)
+	menuRepository := repository.NewMenuRepository()
+	menuService := service.NewMenuService(menuRepository, db, validate)
+	menuController := controller.NewMenuController(menuService, jwtService)
 
 	r := gin.Default()
 	r.Static("assets", "./assets")
@@ -64,11 +64,12 @@ func main() {
 			userInfo.PUT("", userController.UpdateUserInfoPersonal)
 		}
 
-		// menu := v1.Group("/menu", middleware.AuthorizeJWT(jwtService))
-		// {
-		// 	userInfo.POST("", menuController.InsertMenu)
-		// 	userInfo.PUT("", menuController.UpdateMenu)
-		// }
+		menu := v1.Group("/menu")
+		{
+			menu.GET("", menuController.GetMenu)
+			menu.POST("", menuController.InsertMenu)
+			menu.PUT("", menuController.UpdateMenu)
+		}
 	}
 	log.Printf("connect to http://localhost:%s/", port)
 	r.Run(":" + port)
