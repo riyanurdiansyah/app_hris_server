@@ -163,9 +163,7 @@ func (controller *MenuControllerImpl) UpdateMenu(c *gin.Context) {
 				c.JSON(http.StatusBadRequest, responses)
 			} else {
 				checkId := controller.MenuService.CheckMenu(menuUpdateRequest.Id)
-				if checkId == false {
-
-				} else {
+				if checkId {
 					checkPath := "assets/images/menu"
 					oldMenu := controller.MenuService.GetMenuById(menuUpdateRequest.Id)
 

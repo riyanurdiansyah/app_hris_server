@@ -48,6 +48,7 @@ func ToListMenuResponseDTO(promo []*entity.Menu) []*MenuResponseDTO {
 	for _, data := range promo {
 		listTemp = append(listTemp, &MenuResponseDTO{
 			ID:     data.ID,
+			Title:  data.Title,
 			Image:  data.Image,
 			Status: data.Status,
 			Route:  data.Route,

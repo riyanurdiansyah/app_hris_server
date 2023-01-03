@@ -15,6 +15,8 @@ func TextValidation(txterror string) string {
 		return "role tidak boleh kosong"
 	} else if strings.Contains(strings.ToLower(txterror), "employeeid") {
 		return "employee_id tidak boleh kosong"
+	} else if strings.Contains(strings.ToLower(txterror), "value") {
+		return "value tidak boleh kosong"
 	} else {
 		return txterror
 	}

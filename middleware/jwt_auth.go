@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 )
 
@@ -21,19 +20,43 @@ func AuthorizeJWT(jwtService service.JWTService) gin.HandlerFunc {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, response)
 			return
 		}
-		splitToken := strings.Split(authHeader, "Bearer ")
-		token, err := jwtService.ValidateToken(splitToken[1])
-		if token.Valid {
-			claims := token.Claims.(jwt.MapClaims)
-			println("CHECK ", claims["user_id"])
+		if strings.Contains(authHeader, "Bearer") {
+			splitToken := strings.Split(authHeader, "Bearer ")
+			if len(splitToken) != 0 {
+				token, err := jwtService.ValidateToken(splitToken[1])
+
+				if err != nil {
+					response := helper.DefaultErrorResponse{
+						Code:    http.StatusUnauthorized,
+						Message: "Unauthorized - " + err.Error(),
+					}
+					c.AbortWithStatusJSON(http.StatusUnauthorized, response)
+					return
+				}
+				if !token.Valid {
+					response := helper.DefaultErrorResponse{
+						Code:    http.StatusUnauthorized,
+						Message: "Unauthorized - " + err.Error(),
+					}
+					c.AbortWithStatusJSON(http.StatusUnauthorized, response)
+					return
+				}
+			} else {
+				response := helper.DefaultErrorResponse{
+					Code:    http.StatusUnauthorized,
+					Message: "Unauthorized - Token is not found",
+				}
+				c.AbortWithStatusJSON(http.StatusUnauthorized, response)
+				return
+			}
 		} else {
-			println(err)
 			response := helper.DefaultErrorResponse{
 				Code:    http.StatusUnauthorized,
-				Message: "Unauthorized - " + err.Error(),
+				Message: "Unauthorized - Token must be Bearer",
 			}
 			c.AbortWithStatusJSON(http.StatusUnauthorized, response)
 			return
 		}
+
 	}
 }
