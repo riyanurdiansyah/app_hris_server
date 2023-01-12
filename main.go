@@ -45,6 +45,10 @@ func main() {
 	configService := service.NewConfigService(configRepository, db, validate)
 	configController := controller.NewConfigController(configService, jwtService)
 
+	taskRepository := repository.NewTaskRepository()
+	taskService := service.NewTaskService(taskRepository, db, validate)
+	taskController := controller.NewTaskController(taskService, jwtService)
+
 	r := gin.Default()
 	r.Static("assets", "./assets")
 	r.GET("/", func(c *gin.Context) {
@@ -62,7 +66,7 @@ func main() {
 			company.POST("", companyController.InsertCompany)
 		}
 
-		userInfo := v1.Group("/user-info", middleware.AuthorizeJWT(jwtService))
+		userInfo := v1.Group("/user", middleware.AuthorizeJWT(jwtService))
 		{
 			userInfo.POST("", userController.AddUserInfoPersonal)
 			userInfo.PUT("", userController.UpdateUserInfoPersonal)
@@ -81,6 +85,11 @@ func main() {
 			config.GET("/:name", configController.GetConfigByName)
 			config.POST("", configController.InsertConfig)
 			config.PUT("", configController.UpdateConfig)
+		}
+
+		task := v1.Group("/task")
+		{
+			task.GET("/:id", taskController.GetTaskByUserId)
 		}
 	}
 	log.Printf("connect to http://localhost:%s/", port)

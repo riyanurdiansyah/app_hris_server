@@ -5,6 +5,7 @@ type UserPersonalInfo struct {
 	IdUser            int    `gorm:"column:id_user"`
 	NamaDepan         string `gorm:"column:nama_depan"`
 	NamaBelakang      string `gorm:"column:nama_belakang"`
+	Image             string `gorm:"column:nama_belakang"`
 	JenisKelamin      string `gorm:"column:jenis_kelamin"`
 	TempatLahir       string `gorm:"column:tempat_lahir"`
 	TanggalLahir      string `gorm:"column:tanggal_lahir"`
