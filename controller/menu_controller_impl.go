@@ -74,6 +74,7 @@ func (controller *MenuControllerImpl) InsertMenu(c *gin.Context) {
 				}
 				c.JSON(http.StatusBadRequest, responses)
 			} else {
+
 				checkPath := "assets/images/menu"
 				if _, err := os.Stat(checkPath); errors.Is(err, os.ErrNotExist) {
 					err := os.Mkdir(checkPath, os.ModePerm)
@@ -82,36 +83,38 @@ func (controller *MenuControllerImpl) InsertMenu(c *gin.Context) {
 					}
 				}
 
-				path := "assets/images/menu/" + strings.ToLower(strings.ReplaceAll(menuCreateRequest.Title, " ", "_")) + formatFile
-				errUpload := c.SaveUploadedFile(menuCreateRequest.Image, path)
-				if errUpload != nil {
+				path := checkPath + "/" + strings.ToLower(strings.ReplaceAll(menuCreateRequest.Title, " ", "_")) + formatFile
+				menuCreateRequest.Path = "/" + path
+				promoResponse := controller.MenuService.InsertMenu(&menuCreateRequest)
+				if promoResponse.Error {
 					responses := helper.DefaultResponse{
 						Code:    http.StatusBadRequest,
-						Message: errUpload.Error(),
+						Message: promoResponse.Message,
 						Data:    helper.ObjectKosongResponse{},
 						Status:  false,
 					}
 					c.JSON(http.StatusBadRequest, responses)
 				} else {
-					menuCreateRequest.Path = "/" + path
-					promoResponse := controller.MenuService.InsertMenu(&menuCreateRequest)
-					if promoResponse.Error {
-						responses := helper.DefaultResponse{
-							Code:    http.StatusBadRequest,
-							Message: promoResponse.Message,
-							Data:    helper.ObjectKosongResponse{},
-							Status:  false,
-						}
-						c.JSON(http.StatusBadRequest, responses)
-					} else {
-						responses := helper.DefaultResponse{
-							Code:    http.StatusCreated,
-							Message: "New menu has been added",
-							Data:    promoResponse,
-							Status:  true,
-						}
-						c.JSON(http.StatusOK, responses)
+					c.SaveUploadedFile(menuCreateRequest.Image, path)
+
+					// if errUpload != nil {
+					// 	responses := helper.DefaultResponse{
+					// 		Code:    http.StatusBadRequest,
+					// 		Message: errUpload.Error(),
+					// 		Data:    helper.ObjectKosongResponse{},
+					// 		Status:  false,
+					// 	}
+					// 	c.JSON(http.StatusBadRequest, responses)
+					// } else {
+
+					// }
+					responses := helper.DefaultResponse{
+						Code:    http.StatusCreated,
+						Message: "New menu has been added",
+						Data:    promoResponse,
+						Status:  true,
 					}
+					c.JSON(http.StatusOK, responses)
 				}
 			}
 		}

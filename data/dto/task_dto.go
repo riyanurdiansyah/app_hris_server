@@ -60,6 +60,12 @@ func ToListTaskResponseDTO(promo []*entity.Task) []*TaskResponseDTO {
 			IdUser:   data.IdUser,
 			Progress: data.Progress,
 			Status:   data.Status,
+			TaskBy: TaskByResponseDTO{
+				NamaDepan:    data.NamaDepan,
+				NamaBelakang: data.NamaBelakang,
+				Image:        data.Image,
+				NoHp:         data.NoHp,
+			},
 		})
 	}
 	return listTemp

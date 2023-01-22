@@ -58,10 +58,14 @@ func (service *MenuServiceImpl) InsertMenu(request *dto.MenuCreateDTO) *dto.Menu
 		}
 	} else {
 		menu := entity.Menu{
-			Title:  request.Title,
-			Image:  request.Path,
-			Status: request.Status,
-			Route:  request.Route,
+			Category:    request.Category,
+			Position:    request.Position,
+			Language:    request.Language,
+			Description: request.Description,
+			Title:       request.Title,
+			Image:       request.Path,
+			Status:      request.Status,
+			Route:       request.Route,
 		}
 
 		response := service.MenuRepository.InsertMenu(tx, &menu)
@@ -90,11 +94,15 @@ func (service *MenuServiceImpl) UpdateMenu(request *dto.MenuUpdateDTO) *dto.Menu
 		}
 	} else {
 		menu := entity.Menu{
-			ID:     request.Id,
-			Title:  request.Title,
-			Image:  request.Path,
-			Status: request.Status,
-			Route:  request.Route,
+			ID:          request.Id,
+			Category:    request.Category,
+			Position:    request.Position,
+			Language:    request.Language,
+			Description: request.Description,
+			Title:       request.Title,
+			Image:       request.Path,
+			Status:      request.Status,
+			Route:       request.Route,
 		}
 
 		response := service.MenuRepository.UpdateMenu(tx, &menu)
