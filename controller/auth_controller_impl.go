@@ -38,8 +38,9 @@ func (controller *AuthControllerImpl) SigninWithEmail(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, responses)
 	} else {
 		checkPassword := controller.CheckPasswordHash(userLoginRequest.Password, userResponse.Password)
+		cvtUuid, _ := strconv.Atoi(userResponse.Uuid)
 		if checkPassword {
-			token := controller.JWTService.GenerateToken(strconv.FormatUint(uint64(userResponse.Id), 10), userResponse.Email)
+			token := controller.JWTService.GenerateToken(strconv.FormatUint(uint64(cvtUuid), 10), userResponse.Email)
 			responses := helper.DefaultLoginResponse{
 				Code:    http.StatusOK,
 				Message: "Login is successfull",
@@ -75,8 +76,9 @@ func (controller *AuthControllerImpl) SigninWithUsername(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, responses)
 	} else {
 		checkPassword := controller.CheckPasswordHash(userLoginRequest.Password, userResponse.Password)
+		cvtUuid, _ := strconv.Atoi(userResponse.Uuid)
 		if checkPassword {
-			token := controller.JWTService.GenerateToken(strconv.FormatUint(uint64(userResponse.Id), 10), userResponse.Email)
+			token := controller.JWTService.GenerateToken(strconv.FormatUint(uint64(cvtUuid), 10), userResponse.Email)
 			responses := helper.DefaultLoginResponse{
 				Code:    http.StatusOK,
 				Message: "Login is successfull",
@@ -141,7 +143,8 @@ func (controller *AuthControllerImpl) SignUp(c *gin.Context) {
 			}
 			c.JSON(http.StatusBadRequest, responses)
 		} else {
-			token := controller.JWTService.GenerateToken(strconv.FormatUint(uint64(userCreateResponse.Id), 10), userCreateResponse.Email)
+			cvtUuid, _ := strconv.Atoi(userCreateResponse.Uuid)
+			token := controller.JWTService.GenerateToken(strconv.FormatUint(uint64(cvtUuid), 10), userCreateResponse.Email)
 			responses := helper.DefaultLoginResponse{
 				Code:    http.StatusCreated,
 				Status:  true,

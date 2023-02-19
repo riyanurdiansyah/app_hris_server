@@ -1,7 +1,8 @@
 package dto
 
 type UserDTO struct {
-	ID          int    `json:"id"`
+	// ID          int    `json:"id"`
+	Uuid        string `json:"uuid"`
 	EmployeeId  string `json:"employee_id"`
 	Username    string `json:"username"`
 	Email       string `json:"email"`
@@ -32,10 +33,11 @@ type UserLoginUsernameDTO struct {
 
 type UserLoginEmailDTO struct {
 	Email    string `validate:"required,min=1" json:"email"`
-	Password string `validate:"required,min=8" json:"password"`
+	Password string `validate:"required" json:"password"`
 }
 type UserResponseDTO struct {
-	Id               int    `json:"id"`
+	// Id               int    `json:"id"`
+	Uuid             string `json:"uuid"`
 	EmployeeId       string `json:"employee_id"`
 	Username         string `json:"username"`
 	Email            string `json:"email"`

@@ -3,6 +3,7 @@ package repository
 import (
 	"app-hris-server/data/entity"
 	"app-hris-server/helper"
+	"fmt"
 
 	"gorm.io/gorm"
 )
@@ -29,9 +30,10 @@ func (*TaskRepositoryImpl) CheckTask(db *gorm.DB, id int) bool {
 }
 
 // GetTaskByUserId implements TaskRepository
-func (*TaskRepositoryImpl) GetTaskByUserId(db *gorm.DB, id int) []*entity.Task {
+func (*TaskRepositoryImpl) GetTaskByUserId(db *gorm.DB, id string) []*entity.Task {
+	fmt.Println("WAK WAW ", id)
 	var tasks = []*entity.Task{}
-	result := db.Table("tasks").Joins("INNER JOIN user_info_personal user on user.id_user = tasks.task_by").Where("tasks.id_user= ?", id).Select("*").Find(&tasks)
+	result := db.Table("tasks").Joins("INNER JOIN user_info_personal user on user.uuid_user = tasks.task_by").Where("tasks.uuid_user= ?", id).Select("*").Find(&tasks)
 	helper.PanicIfError(result.Error)
 	return tasks
 }

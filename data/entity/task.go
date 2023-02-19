@@ -2,6 +2,7 @@ package entity
 
 type Task struct {
 	ID           int     `gorm:"column:id;primaryKey;autoIncrement"`
+	Uuid         string  `gorm:"column:uuid_user"`
 	IdUser       string  `gorm:"column:id_user"`
 	Title        string  `gorm:"column:title"`
 	NamaDepan    string  `gorm:"column:nama_depan"`

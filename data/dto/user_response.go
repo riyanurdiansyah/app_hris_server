@@ -27,7 +27,8 @@ func String(length int) string {
 func ToAuthResponseDTO(user *entity.User) *UserResponseDTO {
 
 	return &UserResponseDTO{
-		Id:               user.ID,
+		// Id:               user.ID,
+		Uuid:             user.Uuid,
 		EmployeeId:       user.EmployeeId,
 		Username:         user.Username,
 		Email:            user.Email,
@@ -44,7 +45,8 @@ func ToListAuthResponseDTO(user []*entity.User) []*UserResponseDTO {
 	var listTemp = []*UserResponseDTO{}
 	for _, data := range user {
 		listTemp = append(listTemp, &UserResponseDTO{
-			Id:          data.ID,
+			// Id:          data.ID,
+			Uuid:        data.Uuid,
 			Username:    data.Username,
 			Email:       data.Email,
 			PhoneNumber: data.PhoneNumber,

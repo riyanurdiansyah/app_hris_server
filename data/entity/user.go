@@ -2,6 +2,7 @@ package entity
 
 type User struct {
 	ID               int    `gorm:"column:id;primaryKey;autoIncrement"`
+	Uuid             string `gorm:"column:uuid"`
 	EmployeeId       string `gorm:"column:employee_id"`
 	Username         string `gorm:"column:username"`
 	Email            string `gorm:"column:email"`

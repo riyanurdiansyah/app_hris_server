@@ -5,8 +5,8 @@ import (
 )
 
 type TaskResponseDTO struct {
-	ID       int               `json:"id"`
-	IdUser   string            `json:"user_id"`
+	// ID       int               `json:"id"`
+	// Uuid     string            `json:"uuid"`
 	Title    string            `json:"title"`
 	Status   int               `json:"status"`
 	Progress float64           `json:"progress"`
@@ -55,9 +55,9 @@ func ToListTaskResponseDTO(promo []*entity.Task) []*TaskResponseDTO {
 
 	for _, data := range promo {
 		listTemp = append(listTemp, &TaskResponseDTO{
-			ID:       data.ID,
-			Title:    data.Title,
-			IdUser:   data.IdUser,
+			// ID:       data.ID,
+			Title: data.Title,
+			// IdUser:   data.IdUser,
 			Progress: data.Progress,
 			Status:   data.Status,
 			TaskBy: TaskByResponseDTO{

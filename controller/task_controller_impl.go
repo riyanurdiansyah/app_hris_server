@@ -4,7 +4,6 @@ import (
 	"app-hris-server/helper"
 	"app-hris-server/service"
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -29,8 +28,8 @@ func (*TaskControllerImpl) CheckTask(idTask int) bool {
 // GetTaskByUserId implements TaskController
 func (controller *TaskControllerImpl) GetTaskByUserId(c *gin.Context) {
 	userId := c.Param("id")
-	id, err := strconv.Atoi(userId)
-	if err != nil {
+	// id, err := strconv.Atoi(userId)
+	if userId == "" {
 		responses := helper.DefaultResponse{
 			Code:    http.StatusBadRequest,
 			Status:  false,
@@ -40,7 +39,7 @@ func (controller *TaskControllerImpl) GetTaskByUserId(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, responses)
 	} else {
 
-		userResponse := controller.TaskService.GetTaskByUserId(id)
+		userResponse := controller.TaskService.GetTaskByUserId(userId)
 		responses := helper.DefaultResponse{
 			Code:    http.StatusOK,
 			Status:  true,

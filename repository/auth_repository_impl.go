@@ -2,6 +2,7 @@ package repository
 
 import (
 	"app-hris-server/data/entity"
+	"fmt"
 
 	"gorm.io/gorm"
 )
@@ -26,6 +27,7 @@ func (repo *AuthRepositoryImpl) SignUp(db *gorm.DB, user *entity.User) *entity.U
 
 // FindUserByEmail implements AuthRepository
 func (*AuthRepositoryImpl) FindUserByEmail(db *gorm.DB, email string) *entity.User {
+	fmt.Println("KOCAK 2", email)
 	var user = entity.User{}
 	result := db.Table("users").Select("*").Where("email = ?", email).Scan(&user)
 	if result.Error != nil {

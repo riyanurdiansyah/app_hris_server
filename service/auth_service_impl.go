@@ -6,9 +6,11 @@ import (
 	"app-hris-server/helper"
 	"app-hris-server/repository"
 	"app-hris-server/validation"
+	"fmt"
 	"time"
 
 	"github.com/go-playground/validator"
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -49,6 +51,7 @@ func (service *AuthServiceImpl) SignUp(request *dto.UserCreateDTO) *dto.UserResp
 		}
 	} else {
 		user := entity.User{
+			Uuid:             uuid.New().String(),
 			EmployeeId:       request.EmployeeId,
 			Username:         request.Username,
 			Email:            request.Email,
@@ -69,6 +72,7 @@ func (service *AuthServiceImpl) SignUp(request *dto.UserCreateDTO) *dto.UserResp
 // FindUserByEmail implements AuthService
 func (service *AuthServiceImpl) FindUserByEmail(request *dto.UserLoginEmailDTO) *dto.UserResponseDTO {
 	errorValidation := service.Validate.Struct(request)
+	fmt.Println("KOCAK", errorValidation)
 	if errorValidation != nil {
 		msgError := validation.TextValidation(errorValidation.Error())
 		return &dto.UserResponseDTO{
@@ -85,6 +89,7 @@ func (service *AuthServiceImpl) FindUserByEmail(request *dto.UserLoginEmailDTO) 
 			Message: msgError,
 		}
 	} else {
+		fmt.Println("KOCAK 3", request.Email)
 		userResponse := service.AuthRepository.FindUserByEmail(tx, request.Email)
 		return dto.ToAuthResponseDTO(userResponse)
 	}

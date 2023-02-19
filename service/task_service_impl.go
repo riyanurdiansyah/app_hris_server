@@ -30,7 +30,7 @@ func (*TaskServiceImpl) CheckTask(id int) bool {
 }
 
 // GetTaskByUserId implements TaskService
-func (service *TaskServiceImpl) GetTaskByUserId(userId int) []*dto.TaskResponseDTO {
+func (service *TaskServiceImpl) GetTaskByUserId(userId string) []*dto.TaskResponseDTO {
 	tx := service.DB.Begin()
 	defer helper.CommitOrRollback(tx)
 	if tx.Error != nil {
