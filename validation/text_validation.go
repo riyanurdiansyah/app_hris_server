@@ -17,6 +17,14 @@ func TextValidation(txterror string) string {
 		return "employee_id tidak boleh kosong"
 	} else if strings.Contains(strings.ToLower(txterror), "value") {
 		return "value tidak boleh kosong"
+	} else if strings.Contains(strings.ToLower(txterror), "userid") {
+		return "user_id tidak boleh kosong"
+	} else if strings.Contains(strings.ToLower(txterror), "timeclockin") {
+		return "time_clockin tidak boleh kosong"
+	} else if strings.Contains(strings.ToLower(txterror), "image") {
+		return "image tidak boleh kosong"
+	} else if strings.Contains(strings.ToLower(txterror), "value") {
+		return "value tidak boleh kosong"
 	} else {
 		return txterror
 	}

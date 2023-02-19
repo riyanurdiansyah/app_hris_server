@@ -40,6 +40,7 @@ func (service *AuthServiceImpl) SignUp(request *dto.UserCreateDTO) *dto.UserResp
 	}
 	tx := service.DB.Begin()
 	defer helper.CommitOrRollback(tx)
+
 	if tx.Error != nil {
 		msgError := validation.TextValidation(tx.Error.Error())
 		return &dto.UserResponseDTO{

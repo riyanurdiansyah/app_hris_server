@@ -49,6 +49,10 @@ func main() {
 	taskService := service.NewTaskService(taskRepository, db, validate)
 	taskController := controller.NewTaskController(taskService, jwtService)
 
+	attendanceRepository := repository.NewAttendanceRepository()
+	attendanceService := service.NewAttendanceService(attendanceRepository, db, validate)
+	attendanceController := controller.NewAttendanceController(attendanceService, jwtService)
+
 	r := gin.Default()
 	r.Static("assets", "./assets")
 	r.GET("/", func(c *gin.Context) {
@@ -90,6 +94,10 @@ func main() {
 		task := v1.Group("/task")
 		{
 			task.GET("/:id", taskController.GetTaskByUserId)
+		}
+		attendance := v1.Group("/attendance", middleware.AuthorizeJWT(jwtService))
+		{
+			attendance.POST("/clockin", attendanceController.Clockin)
 		}
 	}
 	log.Printf("connect to http://localhost:%s/", port)
