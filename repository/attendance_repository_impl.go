@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"app-hris-server/data/dto"
 	"app-hris-server/data/entity"
 
 	"gorm.io/gorm"
@@ -13,27 +12,35 @@ func NewAttendanceRepository() AttendanceRepository {
 	return &AttendanceRepositoryImpl{}
 }
 
-// CheckIfDoneClockin implements AttendanceRepository
-func (*AttendanceRepositoryImpl) CheckIfDoneClockin(db *gorm.DB, absent *dto.ClockinCreateDTO) bool {
-	panic("unimplemented")
+// Attendance implements AttendanceRepository
+func (*AttendanceRepositoryImpl) Attendance(db *gorm.DB, ent *entity.Attendance) *entity.Attendance {
+	result := db.Table("attendance").Select("*").Create(&ent)
+	if result.Error != nil {
+		ent.ID = 0
+		return ent
+	}
+
+	return ent
 }
 
-// CheckIfDoneClockout implements AttendanceRepository
-func (*AttendanceRepositoryImpl) CheckIfDoneClockout(db *gorm.DB, absent *dto.ClockoutCreateDTO) bool {
-	panic("unimplemented")
-}
-
-// Clockin implements AttendanceRepository
-func (*AttendanceRepositoryImpl) Clockin(db *gorm.DB, absent *entity.ClockIn) *entity.ClockIn {
-	result := db.Table("attendance").Select("*").Create(&absent)
+// UpdateAttendance implements AttendanceRepository
+func (*AttendanceRepositoryImpl) UpdateAttendance(db *gorm.DB, ent *entity.Attendance) *entity.Attendance {
+	result := db.Table("attendance").Where("uuid_user = ?", ent.UserId).Where("date = ?", ent.Date).Updates(&ent)
 	if result.Error != nil {
 		///handle panic
 		panic(result.Error)
 	}
-	return absent
+
+	return ent
 }
 
-// Clockout implements AttendanceRepository
-func (*AttendanceRepositoryImpl) Clockout(db *gorm.DB, absent *entity.ClockOut) *entity.ClockOut {
-	panic("unimplemented")
+// CheckAttendance implements AttendanceRepository
+func (*AttendanceRepositoryImpl) CheckAttendance(db *gorm.DB, userid string, date string) *entity.Attendance {
+	var attendance = entity.Attendance{}
+	result := db.Table("attendance").Select("*").Where("uuid_user = ?", userid).Where("date = ?", date).Scan(&attendance)
+	if result.Error != nil {
+		attendance.ID = 0
+		return &attendance
+	}
+	return &attendance
 }

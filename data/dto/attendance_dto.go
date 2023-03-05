@@ -6,8 +6,8 @@ import (
 )
 
 type AttendanceResponseDTO struct {
-	ID                int     `json:"id"`
-	UserId            int     `json:"user_id"`
+	// ID                int     `json:"id"`
+	UserId            string  `json:"user_id"`
 	TimeClockin       string  `json:"time_clockin"`
 	TimeClockout      string  `json:"time_clockout"`
 	ImageClockin      string  `json:"image_clockin"`
@@ -22,8 +22,20 @@ type AttendanceResponseDTO struct {
 	Message           string  `json:"-"`
 }
 
+type AttendanceCreateDTO struct {
+	UserId    string                `validate:"required" form:"uuid_user"`
+	Time      string                `validate:"required" form:"time"`
+	Image     *multipart.FileHeader `form:"image" validate:"required"`
+	Path      string
+	Latitude  float64 `validate:"required" form:"latitude"`
+	Longitude float64 `validate:"required" form:"longitude"`
+	Note      string  `form:"note"`
+	Kode      string  `validate:"required" form:"kode"`
+	Date      string  `validate:"required" form:"date"`
+}
+
 type ClockinCreateDTO struct {
-	UserId           int                   `validate:"required" form:"user_id"`
+	UserId           string                `validate:"required" form:"user_id"`
 	TimeClockin      string                `validate:"required" form:"time_clockin"`
 	Image            *multipart.FileHeader `form:"image" validate:"required"`
 	Path             string
@@ -33,7 +45,7 @@ type ClockinCreateDTO struct {
 }
 
 type ClockoutCreateDTO struct {
-	UserId            int                   `validate:"required" form:"user_id"`
+	UserId            string                `validate:"required" form:"user_id"`
 	TimeClockout      string                `validate:"required" form:"time_clockout"`
 	Image             *multipart.FileHeader `form:"image" validate:"required"`
 	Path              string                `validate:"required"`
@@ -45,7 +57,7 @@ type ClockoutCreateDTO struct {
 func ToAttendanceResponseDTO(ent *entity.Attendance) *AttendanceResponseDTO {
 
 	return &AttendanceResponseDTO{
-		ID:                ent.ID,
+		// ID:                ent.ID,
 		UserId:            ent.UserId,
 		TimeClockin:       ent.TimeClockin,
 		TimeClockout:      ent.TimeClockout,

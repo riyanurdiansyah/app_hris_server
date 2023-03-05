@@ -58,8 +58,10 @@ func main() {
 	r.GET("/", func(c *gin.Context) {
 		c.File("index.html")
 	})
+
 	v1 := r.Group("/api/v1")
 	{
+
 		auth := v1.Group("/auth")
 		{
 			auth.POST("/signup", authController.SignUp)
@@ -97,7 +99,7 @@ func main() {
 		}
 		attendance := v1.Group("/attendance", middleware.AuthorizeJWT(jwtService))
 		{
-			attendance.POST("/clockin", attendanceController.Clockin)
+			attendance.POST("", attendanceController.Attendance)
 		}
 	}
 	log.Printf("connect to http://localhost:%s/", port)

@@ -72,7 +72,6 @@ func (service *AuthServiceImpl) SignUp(request *dto.UserCreateDTO) *dto.UserResp
 // FindUserByEmail implements AuthService
 func (service *AuthServiceImpl) FindUserByEmail(request *dto.UserLoginEmailDTO) *dto.UserResponseDTO {
 	errorValidation := service.Validate.Struct(request)
-	fmt.Println("KOCAK", errorValidation)
 	if errorValidation != nil {
 		msgError := validation.TextValidation(errorValidation.Error())
 		return &dto.UserResponseDTO{

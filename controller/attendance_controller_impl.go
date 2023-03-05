@@ -5,6 +5,7 @@ import (
 	"app-hris-server/helper"
 	"app-hris-server/service"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -21,21 +22,11 @@ func NewAttendanceController(attendanceService service.AttendanceService, jwtSer
 	}
 }
 
-// CheckIfDoneClockin implements AttendanceController
-func (*AttendanceControllerImpl) CheckIfDoneClockin(absent *dto.ClockinCreateDTO) bool {
-	panic("unimplemented")
-}
-
-// CheckIfDoneClockout implements AttendanceController
-func (*AttendanceControllerImpl) CheckIfDoneClockout(absent *dto.ClockoutCreateDTO) bool {
-	panic("unimplemented")
-}
-
-// Clockin implements AttendanceController
-func (controller *AttendanceControllerImpl) Clockin(c *gin.Context) {
-
-	request := dto.ClockinCreateDTO{}
+// Attendance implements AttendanceController
+func (controller *AttendanceControllerImpl) Attendance(c *gin.Context) {
+	request := dto.AttendanceCreateDTO{}
 	err := c.ShouldBind(&request)
+
 	if err != nil {
 		responses := helper.DefaultResponse{
 			Code:    http.StatusBadRequest,
@@ -49,27 +40,31 @@ func (controller *AttendanceControllerImpl) Clockin(c *gin.Context) {
 		if errBind != nil {
 			responses := helper.DefaultResponse{
 				Code:    http.StatusBadRequest,
-				Message: "please check your file image",
+				Message: "please check your file images",
 				Data:    helper.ObjectKosongResponse{},
 				Status:  false,
 			}
 			c.JSON(http.StatusBadRequest, responses)
 		} else {
-			promoResponse := controller.AttendanceService.Clockin(&request)
-			if promoResponse.Error {
+			checkAttendance := controller.AttendanceService.CheckAttendance(&request)
+			if checkAttendance {
 				responses := helper.DefaultResponse{
 					Code:    http.StatusBadRequest,
-					Message: promoResponse.Message,
+					Message: "Kamu sudah melakukan absen",
 					Data:    helper.ObjectKosongResponse{},
 					Status:  false,
 				}
 				c.JSON(http.StatusBadRequest, responses)
 			} else {
-
-				c.SaveUploadedFile(request.Image, promoResponse.ImageClockin)
+				promoResponse := controller.AttendanceService.Attendance(&request)
+				if strings.ToLower(request.Kode) == "clockin" {
+					c.SaveUploadedFile(request.Image, promoResponse.ImageClockin)
+				} else {
+					c.SaveUploadedFile(request.Image, promoResponse.ImageClockout)
+				}
 				responses := helper.DefaultResponse{
 					Code:    http.StatusCreated,
-					Message: "Attendance has been added",
+					Message: "Data has been recorded",
 					Data:    promoResponse,
 					Status:  true,
 				}
@@ -77,9 +72,4 @@ func (controller *AttendanceControllerImpl) Clockin(c *gin.Context) {
 			}
 		}
 	}
-}
-
-// Clockout implements AttendanceController
-func (*AttendanceControllerImpl) Clockout(c *gin.Context) {
-	panic("unimplemented")
 }
